@@ -2,7 +2,7 @@ import fs from "fs";
 
 class ProductManager {
   constructor() {
-    this.path = "./Products.json";
+    this.path = "../files/Products.json";
   }
 
   getProducts = async () => {
@@ -158,43 +158,45 @@ class ProductManager {
   };
 }
 
-const p = new ProductManager();
-console.log(await p.getProducts());
-console.log("-----------------------------------");
-let producto = {
-  title: "producto prueba",
-  description: "Este es un producto prueba",
-  price: 300,
-  thumbnail: "Sin imagen",
-  code: "abc123",
-  stock: 10,
-};
+export default ProductManager;
 
-let producto2 = {
-  title: "producto prueba",
-  description: "Este es un producto prueba",
-  price: 300,
-  thumbnail: "Sin imagen",
-  code: "bce342",
-  stock: 10,
-};
-await p.addProduct(producto);
-await p.addProduct(producto2);
-console.log(await p.getProducts());
-console.log("-----------------------------------");
-console.log(await p.getProductById(10));
-console.log("-----------------------------------");
-console.log(await p.getProductById(2));
-console.log("-----------------------------------");
-let nuevoProducto = {
-  title: "elNuevo",
-  description: "aaa",
-  price: 100,
-  thumbnail: "no",
-  code: "codigoo",
-  stock: 10,
-};
-await p.updateProduct(2, nuevoProducto);
-await p.deleteProduct(1);
-console.log("-----------------------------------");
-await p.getProducts();
+// const p = new ProductManager();
+// console.log(await p.getProducts());
+// console.log("-----------------------------------");
+// let producto = {
+//   title: "producto prueba",
+//   description: "Este es un producto prueba",
+//   price: 300,
+//   thumbnail: "Sin imagen",
+//   code: "abc123",
+//   stock: 10,
+// };
+
+// let producto2 = {
+//   title: "producto prueba 2",
+//   description: "Este es un producto prueba",
+//   price: 600,
+//   thumbnail: "Sin imagen",
+//   code: "bce342",
+//   stock: 20,
+// };
+// await p.addProduct(producto);
+// await p.addProduct(producto2);
+// console.log(await p.getProducts());
+// console.log("-----------------------------------");
+// console.log(await p.getProductById(10));
+// console.log("-----------------------------------");
+// console.log(await p.getProductById(2));
+// console.log("-----------------------------------");
+// let nuevoProducto = {
+//   title: "elNuevo",
+//   description: "aaa",
+//   price: 100,
+//   thumbnail: "no",
+//   code: "codigoo",
+//   stock: 10,
+// };
+// await p.updateProduct(2, nuevoProducto);
+// await p.deleteProduct(1);
+// console.log("-----------------------------------");
+// await p.getProducts();
