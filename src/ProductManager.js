@@ -2,14 +2,16 @@ import fs from "fs";
 
 class ProductManager {
   constructor() {
-    this.path = "../files/Products.json";
+    this.path = "files/Products.json";
   }
 
   getProducts = async () => {
     try {
       if (fs.existsSync(this.path)) {
         const data = await fs.promises.readFile(this.path, "utf-8");
+      
         const products = JSON.parse(data);
+        
         return products;
       } else {
         return [];
@@ -19,7 +21,7 @@ class ProductManager {
     }
   };
 
-  validarDatos(title, description, price, thumbnail, code, stock) {
+  validarDatos(title, description, price, status, thumbnail, code, stock) {
     if (title == "" || title == null) {
       console.log("Por favor ingrese un titulo");
     }
@@ -29,8 +31,11 @@ class ProductManager {
     if (price == "" || price == null) {
       console.log("Por favor ingrese un precio");
     }
-    if (thumbnail == "" || thumbnail == null) {
-      console.log("Por favor ingrese una ruta de imagen");
+    if (status != true || status != false) {
+      console.log("Status debe ser true o false");
+    }
+    if (thumbnail == "" || thumbnail == null ) {
+      thumbnail = [];
     }
     if (stock == "" || stock == null) {
       console.log("Por favor ingrese un stock");
@@ -49,6 +54,7 @@ class ProductManager {
         !producto.description ||
         !producto.price ||
         !producto.thumbnail ||
+        !producto.status ||
         !producto.code ||
         !producto.stock
       ) {
@@ -56,6 +62,7 @@ class ProductManager {
           producto.title,
           producto.description,
           producto.price,
+          producto.status,
           producto.thumbnail,
           producto.code,
           producto.stock
@@ -115,23 +122,36 @@ class ProductManager {
     }
   };
 
-  updateProduct = async (idProd, producto) => {
+  updateProduct = async (
+    idProd,
+    titulo,
+    descripcion,
+    precio,
+    status,
+    thumbnail,
+    code,
+    stock
+  ) => {
     let productos = await this.getProducts();
 
-    productos.map(function (dato) {
-      if (dato.id == idProd) {
-        dato.title = producto.title;
-        dato.description = producto.description;
-        dato.price = producto.price;
-        dato.thumbnail = producto.thumbnail;
-        dato.code = producto.code;
-        dato.stock = producto.stock;
-      }
+    const productoIndex = productos.findIndex((producto) => {
+      return producto.id == idProd;
     });
-    await fs.promises.writeFile(
-      this.path,
-      JSON.stringify(productos, null, "\t")
-    );
+
+    productos[productoIndex].title = titulo;
+    productos[productoIndex].description = descripcion;
+    productos[productoIndex].price = precio;
+    productos[productoIndex].status = status;
+    productos[productoIndex].thumbnail = thumbnail;
+    productos[productoIndex].code = code;
+    productos[productoIndex].stock = stock;
+
+    try {
+      await fs.promises.writeFile(this.path, JSON.stringify(productos,null,'\t'))
+      return 'Producto modificado'
+  } catch (error) {
+       return error   
+  }
   };
 
   deleteProduct = async (idProd) => {
@@ -180,6 +200,7 @@ export default ProductManager;
 //   code: "bce342",
 //   stock: 20,
 // };
+// console.log(producto2["code"])
 // await p.addProduct(producto);
 // await p.addProduct(producto2);
 // console.log(await p.getProducts());
@@ -196,7 +217,7 @@ export default ProductManager;
 //   code: "codigoo",
 //   stock: 10,
 // };
-// await p.updateProduct(2, nuevoProducto);
+// await p.updateProduct(2, nuevoProducto.title,"nn",1200,true,["img1","img2"],"ncode",3300);
 // await p.deleteProduct(1);
 // console.log("-----------------------------------");
 // await p.getProducts();
