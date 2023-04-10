@@ -65,19 +65,25 @@ class CarritoManager {
   addProductToCart = async (idCart, product) => {
     try {
       const carritos = await this.getCarts();
-      const cart = await this.getCartById(parseInt(idCart));
+      // const cart = await this.getCartById(parseInt(idCart));
 
+      //Recorro carritos
       for (let i = 0; i < carritos.length; i++) {
-        if (carritos[i].id == cart.id) {
-          for (let e = 0; e < carritos[i].products.length; e++) {
-            if (carritos[i].products[e].product == product.id) {
-              if (carritos[i].products[e].product == product.id) {
-                carritos[i].products[e].quantity += 1;
-              } else {
-                carritos[i].products[e].product = product.id;
-                carritos[i].products[e].quantity = 1;
-              }
+        if (carritos[i].id == idCart) {
+          //Recorro productos en el carrito encontrado
+          let valores = Object.values(carritos[i].products);
+          let encontrado = false;
+          let j = 0;
+          while (!encontrado && j < valores.length) {
+            if (valores[j].product == product.id) {
+              valores[j].quantity += 1;
+              encontrado = true;
+            } else {
+              j++;
             }
+          }
+          if (encontrado == false) {
+            carritos[i].products.push({ product: product.id, quantity: 1 });
           }
         }
       }
@@ -93,4 +99,3 @@ class CarritoManager {
 }
 
 export default CarritoManager;
-

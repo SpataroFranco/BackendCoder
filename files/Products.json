@@ -1,17 +1,5 @@
 [
 	{
-		"id": 2
-	},
-	{
-		"id": 3
-	},
-	{
-		"id": 4
-	},
-	{
-		"id": 5
-	},
-	{
 		"title": "Producto editado",
 		"description": "Es un prod editado",
 		"price": 150,
@@ -49,5 +37,18 @@
 		"code": "cod3",
 		"stock": 1,
 		"id": 8
+	},
+	{
+		"title": "Producto agregado 2",
+		"description": "Es un prod editado",
+		"price": 150,
+		"status": true,
+		"thumbnail": [
+			"tengo imagen",
+			"imagen 2"
+		],
+		"code": "cod344",
+		"stock": 11,
+		"id": 9
 	}
 ]
