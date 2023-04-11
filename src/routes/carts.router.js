@@ -28,15 +28,15 @@ router.get("/:cid", async (req, res) => {
 });
 
 router.post("/:cid/product/:pid", async (req, res) => {
-    const cid = req.params.cid;
-    const pid = req.params.pid;
+  const cid = req.params.cid;
+  const pid = req.params.pid;
 
-    const producto = await productManager.getProductById(parseInt(pid));
-    const carrito = await carritoManager.getCartById(parseInt(cid));
+  const producto = await productManager.getProductById(parseInt(pid));
+  const carrito = await carritoManager.getCartById(parseInt(cid));
 
-    await carritoManager.addProductToCart(carrito.id, producto)
+  await carritoManager.addProductToCart(carrito.id, producto);
 
-    res.send({status:"Success", "cart":carrito})
-})
+  res.send({ status: "Success", cart: carrito });
+});
 
 export default router;

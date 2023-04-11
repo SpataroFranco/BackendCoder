@@ -9,9 +9,9 @@ class ProductManager {
     try {
       if (fs.existsSync(this.path)) {
         const data = await fs.promises.readFile(this.path, "utf-8");
-      
+
         const products = JSON.parse(data);
-        
+
         return products;
       } else {
         return [];
@@ -34,7 +34,7 @@ class ProductManager {
     if (status != true || status != false) {
       console.log("Status debe ser true o false");
     }
-    if (thumbnail == "" || thumbnail == null ) {
+    if (thumbnail == "" || thumbnail == null) {
       thumbnail = [];
     }
     if (stock == "" || stock == null) {
@@ -147,11 +147,14 @@ class ProductManager {
     productos[productoIndex].stock = stock;
 
     try {
-      await fs.promises.writeFile(this.path, JSON.stringify(productos,null,'\t'))
-      return 'Producto modificado'
-  } catch (error) {
-       return error   
-  }
+      await fs.promises.writeFile(
+        this.path,
+        JSON.stringify(productos, null, "\t")
+      );
+      return "Producto modificado";
+    } catch (error) {
+      return error;
+    }
   };
 
   deleteProduct = async (idProd) => {

@@ -44,7 +44,7 @@ router.post("/", async (req, res) => {
 router.put("/:pid", async (req, res) => {
   const pid = req.params.pid;
 
-  // const prod = req.body;
+  const prod = req.body;
 
   let producto = await manager.getProductById(parseInt(pid));
 
@@ -52,18 +52,18 @@ router.put("/:pid", async (req, res) => {
     return res.send({ error: "Producto no encontrado" });
   }
 
-  // await manager.updateProduct(
-  //   parseInt(pid),
-  //   prod.title,
-  //   prod.description,
-  //   prod.price,
-  //   prod.status,
-  //   prod.thumbnail,
-  //   prod.code,
-  //   prod.stock
-  // );
+  await manager.updateProduct(
+    parseInt(pid),
+    prod.title,
+    prod.description,
+    prod.price,
+    prod.status,
+    prod.thumbnail,
+    prod.code,
+    prod.stock
+  );
 
-  res.send(req.body);
+  res.send(prod);
 });
 
 router.delete("/:pid", async (req, res) => {
@@ -77,9 +77,9 @@ router.delete("/:pid", async (req, res) => {
   await manager.deleteProduct(parseInt(pid));
 
   res.send({
-    status:"Success",
-    message:"Producto borrado"
-  })
+    status: "Success",
+    message: "Producto borrado",
+  });
 });
 
 export default router;

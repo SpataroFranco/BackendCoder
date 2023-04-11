@@ -1,15 +1,12 @@
 [
 	{
-		"title": "Producto editado",
-		"description": "Es un prod editado",
-		"price": 150,
+		"title": "Producto",
+		"description": "Es un producto",
+		"price": 250,
 		"status": true,
-		"thumbnail": [
-			"tengo imagen",
-			"imagen 2"
-		],
-		"code": "codigo545",
-		"stock": 120,
+		"thumbnail": [],
+		"code": "codigoNuevo",
+		"stock": 10,
 		"id": 6
 	},
 	{
@@ -39,16 +36,16 @@
 		"id": 8
 	},
 	{
-		"title": "Producto agregado 2",
-		"description": "Es un prod editado",
-		"price": 150,
+		"title": "Producto nuevo",
+		"description": "Es un prod nuevo",
+		"price": 1500,
 		"status": true,
 		"thumbnail": [
-			"tengo imagen",
-			"imagen 2"
+			"img1",
+			"img2"
 		],
-		"code": "cod344",
-		"stock": 11,
-		"id": 9
+		"code": "codigo",
+		"stock": 60,
+		"id": 10
 	}
 ]

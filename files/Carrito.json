@@ -34,7 +34,11 @@
 		"products": [
 			{
 				"product": 6,
-				"quantity": 1
+				"quantity": 2
+			},
+			{
+				"product": 10,
+				"quantity": 2
 			}
 		]
 	},
@@ -50,5 +54,9 @@
 				"quantity": 3
 			}
 		]
+	},
+	{
+		"id": 6,
+		"products": []
 	}
 ]
