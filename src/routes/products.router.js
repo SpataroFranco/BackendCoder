@@ -20,6 +20,7 @@ router.get("/", async (req, res) => {
   res.send({ productos });
 });
 
+
 router.get("/:pid", async (req, res) => {
   const pid = req.params.pid;
 
