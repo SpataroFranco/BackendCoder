@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
     const limit = req.query.limit;
   
     if (!limit || limit > productos.length) {
-      return res.render("home", { productos: productos });
+      return res.render("home", { productos: productos, style:"index.css" });
     }
     let productosLimit = [];
     for (let index = 0; index < limit; index++) {
