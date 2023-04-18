@@ -41,6 +41,12 @@ const manager = new ProductManager();
 io.on("connection", (socket) => {
   console.log("Cliente conectado");
 
+  socket.on("carga", async (data) =>{
+    let productos = await manager.getProducts();
+
+    io.sockets.emit("lista", productos);
+  })
+
   socket.on("message", async (data) => {
     const prod = {
       title: data.Titulo,
