@@ -6,6 +6,9 @@ const idAeliminar = document.getElementById("idProd");
 let valores = {};
 let idDelete = 0;
 
+
+socket.emit("message", valores);
+
 boton.addEventListener("click", () => {
   socket.emit("message", valores);
 });
