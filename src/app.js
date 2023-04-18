@@ -6,35 +6,67 @@ import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import productsRouterVista from "./routes/productsRouterVista.router.js";
 import realTimeProducts from "./routes/realTimeProducts.routes.js";
+import ProductManager from "./ProductManager.js";
 
-
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 const app = express();
 
-const server = app.listen(PORT, ()=>{
+const server = app.listen(PORT, () => {
   console.log("Servidor funcionando en el puerto: " + PORT);
-} )
+});
 
-const socketServerIO = new Server(server); 
-
+//Servicio
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname+"/public"));
+app.use(express.static(__dirname + "/public"));
 
+//Vistas
 app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
+//Rutas
+//Vistas
 app.use("/", productsRouterVista);
 app.use("/realtimeproducts", realTimeProducts);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 
-socketServerIO.on("connection", socket=>{
+//IO
+const io = new Server(server);
+
+const manager = new ProductManager();
+
+io.on("connection", (socket) => {
   console.log("Cliente conectado");
 
-  socket.on("message", data =>{
-    socketServerIO.emit("log", data)
-  })
-})
+  socket.on("message", async (data) => {
+    
+    const prod = {
+      title: data.title,
+      description: data.descripcion,
+      price: data.price,
+      status: data.status,
+      thumbnail: data.thumbnail,
+      code: data.code,
+      stock: data.stock,
+    };
+
+    await manager.addProduct(prod);
+
+    for (const key in data) {
+      if (Object.hasOwnProperty.call(data, key)) {
+        const element = data[key];
+        io.emit("log", key+": "+element+"<br/><br/>");
+      }
+    }
+
+    // for (const key in prod) {
+    //   if (Object.hasOwnProperty.call(prod, key)) {
+    //     const element = object[key];
+    //     io.emit("log", key + ": " + element + "<br/><br/>");
+    //   }
+    // }
+  });
+});

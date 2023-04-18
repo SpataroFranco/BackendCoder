@@ -1,25 +1,32 @@
-// import ProductManager from "../ProductManager.js";
-
 const socket = io();
 // const manager = new ProductManager();
 // const productos = await manager.getProducts();
 
-const titulo = document.getElementById("titulo");
-const des = document.getElementById("descripcion");
-const precio = document.getElementById("precio");
-const thumb = document.getElementById("thumbnail");
-const code = document.getElementById("code");
-const stock = document.getElementById("stock");
-
 const log = document.getElementById("log");
+let valores = {}
 
-titulo.addEventListener("keyup", (evt) => {
-  if (evt.key === "Enter") {
-    socket.emit("message", titulo.value);
-    titulo.value = "";
-  }
+boton.addEventListener("click", () => {
+  socket.emit("message", valores);
+  
 });
 
 socket.on("log", (data) => {
-  log.innerHTML += data+"\n";
+  log.innerHTML += data;
 });
+
+const getData = () => {
+  let titulo = document.getElementById("titulo").value;
+  let des = document.getElementById("descripcion").value;
+  let precio = document.getElementById("precio").value;
+  let status = document.getElementById("status").value;
+  let thumb = document.getElementById("thumbnail").value;
+  let code = document.getElementById("code").value;
+  let stock = document.getElementById("stock").value;
+  valores.Titulo = titulo;
+  valores.Descripcion = des;
+  valores.Precio = precio;
+  valores.Status = status;
+  valores.Thumbnail = thumb;
+  valores.Code = code;
+  valores.Stock = stock;
+};

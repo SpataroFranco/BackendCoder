@@ -47,5 +47,18 @@
 		"code": "codigo",
 		"stock": 60,
 		"id": 10
+	},
+	{
+		"title": "Producto nuevo 2",
+		"description": "Es un prod nuevo",
+		"price": 1500,
+		"status": true,
+		"thumbnail": [
+			"img1",
+			"img2"
+		],
+		"code": "codigo22",
+		"stock": 60,
+		"id": 10
 	}
 ]
