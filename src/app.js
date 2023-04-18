@@ -41,33 +41,21 @@ const manager = new ProductManager();
 io.on("connection", (socket) => {
   console.log("Cliente conectado");
 
-  socket.on("message", async (data) => {
+  socket.on("message", async (data) =>{
+    const prod = {
+      title: data.Titulo,
+      description: data.Descripcion,
+      price: data.Precio,
+      status: data.Status,
+      thumbnail: data.Thumbnail,
+      code: data.Code,
+      stock: data.Stock,
+    };
     
-    // const prod = {
-    //   title: data.title,
-    //   description: data.descripcion,
-    //   price: data.price,
-    //   status: data.status,
-    //   thumbnail: data.thumbnail,
-    //   code: data.code,
-    //   stock: data.stock,
-    // };
+    await manager.addProduct(prod);
+    let productos = await manager.getProducts();
 
-    for (const key in data) {
-      if (Object.hasOwnProperty.call(data, key)) {
-        const element = data[key];
-        io.emit("log", key+": "+element+"<br/><br/>");
-      }
-    }
+    io.sockets.emit("lista", productos);
 
-     // await manager.addProduct(prod);
-
-
-    // for (const key in prod) {
-    //   if (Object.hasOwnProperty.call(prod, key)) {
-    //     const element = object[key];
-    //     io.emit("log", key + ": " + element + "<br/><br/>");
-    //   }
-    // }
-  });
+  })
 });

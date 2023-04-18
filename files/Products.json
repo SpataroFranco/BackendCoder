@@ -49,16 +49,53 @@
 		"id": 10
 	},
 	{
-		"title": "Producto nuevo 2",
-		"description": "Es un prod nuevo",
-		"price": 1500,
-		"status": true,
-		"thumbnail": [
-			"img1",
-			"img2"
-		],
-		"code": "codigo22",
-		"stock": 60,
-		"id": 10
+		"title": "erwer",
+		"description": "werwer",
+		"price": "werwer",
+		"status": "werwerwe",
+		"thumbnail": "rwerw",
+		"code": "erwerwe",
+		"stock": "rwerwer",
+		"id": 11
+	},
+	{
+		"title": "efff",
+		"description": "fff",
+		"price": "fff",
+		"status": "fff",
+		"thumbnail": "fff",
+		"code": "ffffffffffffff",
+		"stock": "10",
+		"id": 12
+	},
+	{
+		"title": "rtert",
+		"description": "erter",
+		"price": "tert",
+		"status": "erterterter",
+		"thumbnail": "tert",
+		"code": "ertertert",
+		"stock": "ertert",
+		"id": 13
+	},
+	{
+		"title": "rtert",
+		"description": "erter",
+		"price": "tert",
+		"status": "erterterter",
+		"thumbnail": "tert",
+		"code": "ertertertfdf",
+		"stock": "ertert",
+		"id": 14
+	},
+	{
+		"title": "asdas",
+		"description": "asdasdas",
+		"price": "dasdasd",
+		"status": "asdasd",
+		"thumbnail": "sadasd",
+		"code": "dasd",
+		"stock": "dasdas",
+		"id": 15
 	}
 ]

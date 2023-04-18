@@ -27,23 +27,8 @@
     </form>
   </div>
   <div>
-    {{! lista de todos los productos agregados hasta el momento }}
     <h1>Lista de productos:</h1>
-    <br /><br />
-    {{#each productos}}
-      <p>Titulo: {{title}}</p>
-      <p>Descripcion: {{description}}</p>
-      <p>Precio: {{price}}</p>
-      <p>Status: {{status}}</p>
-      <p>Thumbnail: {{thumbnail}}</p>
-      <p>Code: {{code}}</p>
-      <p>Stock: {{stock}}</p>
-      <p>Id: {{id}}</p>
-      <br /><br />
-    {{/each}}
-  </div>
-
-  <p id="log"></p>
+    <p id="lista"></p>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>

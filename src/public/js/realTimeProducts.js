@@ -1,18 +1,18 @@
 const socket = io();
-// const manager = new ProductManager();
-// const productos = await manager.getProducts();
 
 const log = document.getElementById("log");
+const lista = document.getElementById("lista");
+
 let valores = {}
+
 
 boton.addEventListener("click", () => {
   socket.emit("message", valores);
-  
 });
 
-socket.on("log", (data) => {
-  log.innerHTML += data;
-});
+socket.on("lista", (data) =>{
+  lista.innerHTML = data;
+})
 
 const getData = () => {
   let titulo = document.getElementById("titulo").value;
