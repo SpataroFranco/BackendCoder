@@ -57,4 +57,11 @@ io.on("connection", (socket) => {
 
     io.sockets.emit("lista", productos);
   });
+
+  socket.on("messageDelete", async (data) => {
+    await manager.deleteProduct(parseInt(data));
+    let productos = await manager.getProducts();
+
+    io.sockets.emit("lista", productos);
+  });
 });

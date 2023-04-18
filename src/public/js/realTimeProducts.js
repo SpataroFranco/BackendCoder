@@ -1,16 +1,22 @@
 const socket = io();
 
-const log = document.getElementById("log");
 const lista = document.getElementById("lista");
+const idAeliminar = document.getElementById("idProd");
 
 let valores = {};
+let idDelete = 0;
 
 boton.addEventListener("click", () => {
   socket.emit("message", valores);
 });
 
+botonDelete.addEventListener("click", () =>{
+  socket.emit("messageDelete", idDelete);
+});
+
+
 socket.on("lista", (data) => {
-  let foo = data.map(function(el){
+  let datos = data.map(function(el){
     return "<p>"+"Titulo: "+el.title+"</p>"+
             "<p>"+"Descripcion: "+el.description+"</p>"+
             "<p>"+"Precio: "+el.price+"</p>"+
@@ -21,7 +27,7 @@ socket.on("lista", (data) => {
             "<p>"+"Id: "+el.id+"</p>"+
             "<br>";
   })
-  lista.innerHTML = foo;
+  lista.innerHTML = datos;
 });
 
 const getData = () => {
@@ -40,3 +46,8 @@ const getData = () => {
   valores.Code = code;
   valores.Stock = stock;
 };
+
+const prodAEliminar = () => {
+  let id = document.getElementById("idProd").value;
+  idDelete = id;
+} 

@@ -1,15 +1,5 @@
 [
 	{
-		"title": "Producto",
-		"description": "Es un producto",
-		"price": 250,
-		"status": true,
-		"thumbnail": [],
-		"code": "codigoNuevo",
-		"stock": 10,
-		"id": 6
-	},
-	{
 		"title": "Producto editado 2",
 		"description": "Es un prod editado",
 		"price": 150,
