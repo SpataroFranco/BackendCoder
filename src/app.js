@@ -43,17 +43,15 @@ io.on("connection", (socket) => {
 
   socket.on("message", async (data) => {
     
-    const prod = {
-      title: data.title,
-      description: data.descripcion,
-      price: data.price,
-      status: data.status,
-      thumbnail: data.thumbnail,
-      code: data.code,
-      stock: data.stock,
-    };
-
-    await manager.addProduct(prod);
+    // const prod = {
+    //   title: data.title,
+    //   description: data.descripcion,
+    //   price: data.price,
+    //   status: data.status,
+    //   thumbnail: data.thumbnail,
+    //   code: data.code,
+    //   stock: data.stock,
+    // };
 
     for (const key in data) {
       if (Object.hasOwnProperty.call(data, key)) {
@@ -61,6 +59,9 @@ io.on("connection", (socket) => {
         io.emit("log", key+": "+element+"<br/><br/>");
       }
     }
+
+     // await manager.addProduct(prod);
+
 
     // for (const key in prod) {
     //   if (Object.hasOwnProperty.call(prod, key)) {
