@@ -3,16 +3,26 @@ const socket = io();
 const log = document.getElementById("log");
 const lista = document.getElementById("lista");
 
-let valores = {}
-
+let valores = {};
 
 boton.addEventListener("click", () => {
   socket.emit("message", valores);
 });
 
-socket.on("lista", (data) =>{
-  lista.innerHTML = data;
-})
+socket.on("lista", (data) => {
+  let foo = data.map(function(el){
+    return "<p>"+"Titulo: "+el.title+"</p>"+
+            "<p>"+"Descripcion: "+el.description+"</p>"+
+            "<p>"+"Precio: "+el.price+"</p>"+
+            "<p>"+"Status: "+el.status+"</p>"+
+            "<p>"+"Thumbnail: "+el.thumbnail+"</p>"+
+            "<p>"+"Code: "+el.code+"</p>"+
+            "<p>"+"Stock: "+el.stock+"</p>"+
+            "<p>"+"Id: "+el.id+"</p>"+
+            "<br>";
+  })
+  lista.innerHTML = foo;
+});
 
 const getData = () => {
   let titulo = document.getElementById("titulo").value;

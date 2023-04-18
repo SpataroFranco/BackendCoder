@@ -41,7 +41,7 @@ const manager = new ProductManager();
 io.on("connection", (socket) => {
   console.log("Cliente conectado");
 
-  socket.on("message", async (data) =>{
+  socket.on("message", async (data) => {
     const prod = {
       title: data.Titulo,
       description: data.Descripcion,
@@ -51,11 +51,10 @@ io.on("connection", (socket) => {
       code: data.Code,
       stock: data.Stock,
     };
-    
+
     await manager.addProduct(prod);
     let productos = await manager.getProducts();
 
     io.sockets.emit("lista", productos);
-
-  })
+  });
 });
