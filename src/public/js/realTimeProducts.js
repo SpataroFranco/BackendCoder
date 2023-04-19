@@ -7,7 +7,7 @@ let valores = {};
 let idDelete = 0;
 
 
-socket.emit("carga", valores);
+socket.emit("carga");
 
 boton.addEventListener("click", () => {
   socket.emit("message", valores);
