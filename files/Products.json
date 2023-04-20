@@ -28,5 +28,35 @@
 		"code": "1234",
 		"stock": "10",
 		"id": 12
+	},
+	{
+		"title": "producto",
+		"description": "des",
+		"price": "100",
+		"status": "false",
+		"thumbnail": "none",
+		"code": "123asc",
+		"stock": "40",
+		"id": 13
+	},
+	{
+		"title": "producto 2",
+		"description": "des",
+		"price": "400",
+		"status": "true",
+		"thumbnail": "none",
+		"code": "123ascd",
+		"stock": "10",
+		"id": 14
+	},
+	{
+		"title": "tit",
+		"description": "des",
+		"price": "111",
+		"status": "true",
+		"thumbnail": "no",
+		"code": "12345",
+		"stock": "10",
+		"id": 15
 	}
 ]

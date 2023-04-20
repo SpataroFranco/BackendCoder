@@ -20,7 +20,7 @@ botonDelete.addEventListener("click", () =>{
 
 socket.on("lista", (data) => {
   let datos = data.map(function(el){
-    return "<p>"+"Titulo: "+el.title+"</p>"+
+    return "<div>"+"<div class='producto'>"+"<p>"+"Titulo: "+el.title+"</p>"+
             "<p>"+"Descripcion: "+el.description+"</p>"+
             "<p>"+"Precio: "+el.price+"</p>"+
             "<p>"+"Status: "+el.status+"</p>"+
@@ -28,7 +28,7 @@ socket.on("lista", (data) => {
             "<p>"+"Code: "+el.code+"</p>"+
             "<p>"+"Stock: "+el.stock+"</p>"+
             "<p>"+"Id: "+el.id+"</p>"+
-            "<br>";
+            "</div>"+"</div>";
   })
   lista.innerHTML = datos;
 });
