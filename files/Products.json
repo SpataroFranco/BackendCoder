@@ -1,62 +1,29 @@
 [
 	{
-		"title": "dxfsdf",
-		"description": "sdfsd",
-		"price": "fsdfsd",
-		"status": "fsdf",
-		"thumbnail": "sdfsdfsd",
-		"code": "fsdfs",
-		"stock": "dfsdfsdf",
-		"id": 10
-	},
-	{
-		"title": "aa",
-		"description": "aa",
-		"price": "a",
-		"status": "aa",
-		"thumbnail": "aa",
-		"code": "aa",
-		"stock": "a",
-		"id": 11
-	},
-	{
-		"title": "producto",
-		"description": "des",
-		"price": "100",
-		"status": "true",
-		"thumbnail": "no",
-		"code": "1234",
-		"stock": "10",
-		"id": 12
-	},
-	{
-		"title": "producto",
-		"description": "des",
-		"price": "100",
-		"status": "false",
-		"thumbnail": "none",
-		"code": "123asc",
-		"stock": "40",
-		"id": 13
+		"title": "producto 1",
+		"description": "des 1",
+		"price": 1000,
+		"status": true,
+		"thumbnail": [],
+		"code": "abc123",
+		"stock": 10
 	},
 	{
 		"title": "producto 2",
-		"description": "des",
-		"price": "400",
-		"status": "true",
-		"thumbnail": "none",
-		"code": "123ascd",
-		"stock": "10",
-		"id": 14
+		"description": "des 2",
+		"price": 500,
+		"status": true,
+		"thumbnail": ["imgPortada"],
+		"code": "gth345",
+		"stock": 5
 	},
 	{
-		"title": "tit",
-		"description": "des",
-		"price": "111",
-		"status": "true",
-		"thumbnail": "no",
-		"code": "12345",
-		"stock": "10",
-		"id": 15
+		"title": "producto 3",
+		"description": "des 3",
+		"price": 650,
+		"status": false,
+		"thumbnail": ["img1","img2"],
+		"code": "lpj564",
+		"stock": 100
 	}
 ]

@@ -1,6 +1,6 @@
 import { Router } from "express";
-import CarritoManager from "../CarritoManager.js";
-import ProductManager from "../ProductManager.js";
+import CarritoManager from "../dao/managers/CarritoManager.js";
+import ProductManager from "../dao/managers/ProductManager.js";
 
 const router = Router();
 const carritoManager = new CarritoManager();
