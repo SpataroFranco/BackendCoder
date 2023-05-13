@@ -2,18 +2,11 @@ import express from "express";
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import __dirname from "./utils.js";
-import productsRouter from "./routes/products.router.js";
-import cartsRouter from "./routes/carts.router.js";
-import productsRouterVista from "./routes/productsRouterVista.router.js";
-import realTimeProducts from "./routes/realTimeProducts.routes.js";
-import ProductManager from "./dao/managers/ProductManager.js";
 import chatModel from "./dao/models/messages.model.js";
-
 import mongoose from "mongoose";
-import productosRouterBD from "./routes/productosDB.route.js";
-import cartsRouterBD from "./routes/cartsDB.route.js";
-import chatsRouterBD from "./routes/chatsDB.route.js";
-
+import productosRouter from "./routes/products.route.js";
+import cartsRouter from "./routes/carts.route.js";
+import chatsRouter from "./routes/chats.route.js";
 
 //Coneccion a la base de datos "ecommerce"
 const MONGO = "mongodb+srv://francoSP:franco@cluster0.5fykqvu.mongodb.net/ecommerce"
@@ -40,54 +33,16 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
 //Rutas
-//Vistas
-app.use("/", productsRouterVista);
-app.use("/realtimeproducts", realTimeProducts);
-app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsRouter);
-
 //Vistas con DB
-app.use("/productos", productosRouterBD);
-app.use("/carts", cartsRouterBD);
-app.use("/chats", chatsRouterBD);
+app.use("/api", productosRouter);
+app.use("/api/carts", cartsRouter);
+app.use("/api/chats", chatsRouter);
 
 //IO
 const io = new Server(server);
 
-const manager = new ProductManager();
-
 io.on("connection", (socket) => {
   console.log("Cliente conectado");
-
-  socket.on("carga", async () =>{
-    let productos = await manager.getProducts();
-
-    io.sockets.emit("lista", productos);
-  })
-
-  socket.on("message", async (data) => {
-    const prod = {
-      title: data.Titulo,
-      description: data.Descripcion,
-      price: data.Precio,
-      status: data.Status,
-      thumbnail: data.Thumbnail,
-      code: data.Code,
-      stock: data.Stock,
-    };
-
-    await manager.addProduct(prod);
-    let productos = await manager.getProducts();
-
-    io.sockets.emit("lista", productos);
-  });
-
-  socket.on("messageDelete", async (data) => {
-    await manager.deleteProduct(parseInt(data));
-    let productos = await manager.getProducts();
-
-    io.sockets.emit("lista", productos);
-  });
 
   socket.on("messageChat", async data =>{
     const chat = { user: data.user, message: data.message };
@@ -103,3 +58,4 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("newUserConnected", data);
   })
 });
+

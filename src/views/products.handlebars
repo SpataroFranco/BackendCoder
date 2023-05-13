@@ -1,0 +1,33 @@
+<div>
+    <h1>Productos:</h1>
+</div>
+<div class="container">
+  {{#each products}}
+    <div class="product">
+      <p> {{this.title}} </p>
+      <p> {{this.thumbnail}} </p>
+      <p> {{this.description}} </p>
+       <p> {{this.category}} </p>
+      <div>
+        <p> {{this.price}} </p>
+        <p> {{this.stock}} </p>
+      </div>
+      <div class="boton">
+        <button>Agregar al carrito</button>
+      </div>
+    </div>
+
+  {{/each}}
+</div>
+
+<div class="page">
+  {{#if hasPrevPage}}
+    <a href="/api/products?page={{prevPage}}&limit={{limit}}"><button> Anterior </button></a>
+  {{/if}}
+
+  {{#if hasNextPage}}
+    <a href="/api/products?page={{nextPage}}&limit={{limit}}"><button> Siguiente </button></a>
+  {{/if}}
+</div>
+
+<script src="/js/products.js"></script>

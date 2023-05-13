@@ -7,19 +7,35 @@ h1 {
   justify-content: center;
 }
 
-#lista {
+.container {
     display: grid;
-    border: 1px red solid;
     gap: 10px;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 
-.producto {
+.product {
     border: 1px solid black;
 }
 
-.producto p{
+.product div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.product p{
     display: flex;
     justify-content: center;
+}
+
+.boton{
+    display: flex;
+    justify-content: center;
+    padding: 2%;
+}
+
+.page{
+    display: flex;
+    justify-content: center;
+    margin: 2rem;
 }

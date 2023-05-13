@@ -1,5 +1,5 @@
 import { Router } from "express";
-import cartModel from "../dao/models/carts.model.js"; 
+import cartModel from "../dao/models/carts.model.js";
 
 const router = Router();
 
@@ -37,14 +37,14 @@ router.get("/:cid", async (req, res) => {
   }
 });
 
-
 router.post("/:cid/producto/:pid", async (req, res) => {
   const cid = req.params.cid;
   const pid = req.params.pid;
 
   const cart = await cartModel.findOne({ _id: cid });
+  //Cambiar esto
   const prodIndex = cart.products.findIndex((cprod) => cprod.product == pid);
-  
+
   if (prodIndex === -1) {
     const product = {
       product: pid,
@@ -56,9 +56,26 @@ router.post("/:cid/producto/:pid", async (req, res) => {
     cart.products[prodIndex].quantity = total + 1;
   }
 
- await cartModel.updateOne({ _id: cid }, { $set: cart });
+  await cartModel.updateOne({ _id: cid }, { $set: cart });
 
-  res.send({res: cart.products})
+  res.send({ res: cart.products });
+});
+
+router.delete("/:cid/producto/:pid", async (req, res) => {
+  const cid = req.params.cid;
+  const pid = req.params.pid;
+
+  const cart = await cartModel.findOne({ _id: cid });
+  const prodIndex = cart.products.findIndex((cprod) => cprod.product == pid);
+
+  if (prodIndex === -1) {
+  } else {
+    cart.products.splice(prodIndex, 1)
+  }
+
+  await cartModel.updateOne({ _id: cid }, { $set: cart });
+
+  res.send({ code: 202, status: "Success", message: cart.products });
 });
 
 export default router;
