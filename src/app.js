@@ -4,7 +4,7 @@ import { Server } from "socket.io";
 import __dirname from "./utils.js";
 import chatModel from "./dao/models/messages.model.js";
 import mongoose from "mongoose";
-import productosRouter from "./routes/products.route.js";
+import productsRouter from "./routes/products.route.js";
 import cartsRouter from "./routes/carts.route.js";
 import chatsRouter from "./routes/chats.route.js";
 
@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 8080;
 
 const app = express();
 
-const conection = mongoose.connect(MONGO);
+await mongoose.connect(MONGO);
 
 const server = app.listen(PORT, () => {
   console.log("Servidor funcionando en el puerto: " + PORT);
@@ -34,7 +34,7 @@ app.set("view engine", "handlebars");
 
 //Rutas
 //Vistas con DB
-app.use("/api", productosRouter);
+app.use("/api", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/chats", chatsRouter);
 
@@ -59,3 +59,20 @@ io.on("connection", (socket) => {
   })
 });
 
+
+
+// import cartModel from "./dao/models/carts.model.js";
+// const cart = await cartModel.find({_id : "645ff8b20680fb7ef68657f1"})
+
+// cart[0].products.push({product:"645edac724223e1d597b7ce0"})
+
+// const result = await cartModel.updateOne({_id:"645ff8b20680fb7ef68657f1"},{$set: cart[0]})
+
+// console.log(result)
+
+
+
+// import cartModel from "./dao/models/carts.model.js";
+
+// const cart = await cartModel.find({_id : "645ff8b20680fb7ef68657f1"});
+// console.log(JSON.stringify(cart, null, "\t"))

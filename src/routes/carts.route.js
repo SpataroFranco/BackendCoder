@@ -20,40 +20,42 @@ router.post("/", async (req, res) => {
   });
 });
 
+//Vista para ver cart específico
 router.get("/:cid", async (req, res) => {
   const cid = req.params.cid;
-
-  try {
-    const result = await cartModel.find({ _id: cid });
-
-    if (result.length > 0) {
-      return res.status(200).send({ status: "sucess", result });
-    }
-  } catch (error) {
-    res.status(400).send({
-      status: "error",
-      error: "El carrito con id: " + cid + " no existe",
-    });
+  const cart = await cartModel
+    .findById(cid)
+    .populate("products.product")
+    .lean();
+    
+  if (cart.products.length > 0) {
+    return res.render("cart", {cart});
   }
+  
 });
 
-router.post("/:cid/producto/:pid", async (req, res) => {
+//Actualiza la cantidad de unidades del producto en el carrito por la cantidad pasada por req.body
+router.put("/:cid/products/:pid", async (req, res) => {
+  const cantidad = req.body;
   const cid = req.params.cid;
   const pid = req.params.pid;
 
   const cart = await cartModel.findOne({ _id: cid });
-  //Cambiar esto
+
   const prodIndex = cart.products.findIndex((cprod) => cprod.product == pid);
+
+  const quantity = cantidad.cantidad;
+  parseInt(quantity);
 
   if (prodIndex === -1) {
     const product = {
       product: pid,
-      quantity: 1,
+      quantity: quantity,
     };
     cart.products.push(product);
   } else {
     let total = cart.products[prodIndex].quantity;
-    cart.products[prodIndex].quantity = total + 1;
+    cart.products[prodIndex].quantity = total + quantity;
   }
 
   await cartModel.updateOne({ _id: cid }, { $set: cart });
@@ -61,17 +63,41 @@ router.post("/:cid/producto/:pid", async (req, res) => {
   res.send({ res: cart.products });
 });
 
-router.delete("/:cid/producto/:pid", async (req, res) => {
+//Actualiza el carrito con un arreglo de productos
+router.put("/:cid", async (req, res) => {
+  //???????????
+});
+
+//Elimina del carrito el producto seleccionado
+router.delete("/:cid/products/:pid", async (req, res) => {
   const cid = req.params.cid;
   const pid = req.params.pid;
 
   const cart = await cartModel.findOne({ _id: cid });
+
   const prodIndex = cart.products.findIndex((cprod) => cprod.product == pid);
 
   if (prodIndex === -1) {
+    return res.send({
+      code: 404,
+      status: "Error",
+      message: "El producto no existe en el carrito",
+    });
   } else {
-    cart.products.splice(prodIndex, 1)
+    cart.products.splice(prodIndex, 1);
+    await cartModel.updateOne({ _id: cid }, { $set: cart });
+
+    res.send({ code: 202, status: "Success", message: cart.products });
   }
+});
+
+//Elimina todos los productos del carrito
+router.delete("/:cid", async (req, res) => {
+  const cid = req.params.cid;
+
+  const cart = await cartModel.findOne({ _id: cid });
+
+  cart.products.splice(0, cart.products.length);
 
   await cartModel.updateOne({ _id: cid }, { $set: cart });
 
