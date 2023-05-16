@@ -1,3 +1,12 @@
+<div className="navbar">
+  <div className="links">
+    <div className="section">
+      <a href="/api/products"> Productos </a>
+      <a href="/api/carts"> Carts </a>
+      <a href="/api/chats"> Chat </a>
+    </div>
+  </div>
+</div>
 <div>
     <h1>Productos:</h1>
 </div>
@@ -22,11 +31,11 @@
 
 <div class="page">
   {{#if hasPrevPage}}
-    <a href="/api/products?page={{prevPage}}&limit={{limit}}"><button> Anterior </button></a>
+    <a href="/products?page={{prevPage}}&limit={{limit}}"><button> Anterior </button></a>
   {{/if}}
 
   {{#if hasNextPage}}
-    <a href="/api/products?page={{nextPage}}&limit={{limit}}"><button> Siguiente </button></a>
+    <a href="/products?page={{nextPage}}&limit={{limit}}"><button> Siguiente </button></a>
   {{/if}}
 </div>
 

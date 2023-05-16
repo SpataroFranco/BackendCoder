@@ -34,7 +34,7 @@ app.set("view engine", "handlebars");
 
 //Rutas
 //Vistas con DB
-app.use("/api", productsRouter);
+app.use("/", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/chats", chatsRouter);
 
@@ -58,21 +58,3 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("newUserConnected", data);
   })
 });
-
-
-
-// import cartModel from "./dao/models/carts.model.js";
-// const cart = await cartModel.find({_id : "645ff8b20680fb7ef68657f1"})
-
-// cart[0].products.push({product:"645edac724223e1d597b7ce0"})
-
-// const result = await cartModel.updateOne({_id:"645ff8b20680fb7ef68657f1"},{$set: cart[0]})
-
-// console.log(result)
-
-
-
-// import cartModel from "./dao/models/carts.model.js";
-
-// const cart = await cartModel.find({_id : "645ff8b20680fb7ef68657f1"});
-// console.log(JSON.stringify(cart, null, "\t"))

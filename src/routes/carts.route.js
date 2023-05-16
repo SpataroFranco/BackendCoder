@@ -5,7 +5,6 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   const result = await cartModel.find();
-
   res.send({ Carritos: result });
 });
 
@@ -27,11 +26,10 @@ router.get("/:cid", async (req, res) => {
     .findById(cid)
     .populate("products.product")
     .lean();
-    
+
   if (cart.products.length > 0) {
-    return res.render("cart", {cart});
+    return res.render("cart", { cart });
   }
-  
 });
 
 //Actualiza la cantidad de unidades del producto en el carrito por la cantidad pasada por req.body
@@ -65,7 +63,16 @@ router.put("/:cid/products/:pid", async (req, res) => {
 
 //Actualiza el carrito con un arreglo de productos
 router.put("/:cid", async (req, res) => {
-  //???????????
+  const carritoNuevo = req.body;
+  const cid = req.params.cid;
+
+  const cart = await cartModel.findOne({ _id: cid });
+
+  cart.products = carritoNuevo;
+
+  await cartModel.updateOne({ _id: cid }, { $set: cart });
+
+  res.send({ code: 202, status: "Success", message: cart.products });
 });
 
 //Elimina del carrito el producto seleccionado

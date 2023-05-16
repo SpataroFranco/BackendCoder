@@ -1,4 +1,5 @@
 import fs from "fs";
+import productoModel from "../models/products.model.js";
 
 class ProductManager {
   constructor() {
@@ -6,19 +7,7 @@ class ProductManager {
   }
 
   getProducts = async () => {
-    try {
-      if (fs.existsSync(this.path)) {
-        const data = await fs.promises.readFile(this.path, "utf-8");
 
-        const products = JSON.parse(data);
-
-        return products;
-      } else {
-        return [];
-      }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   validarDatos(title, description, price, status, thumbnail, code, stock) {
@@ -100,26 +89,7 @@ class ProductManager {
   };
 
   getProductById = async (id) => {
-    try {
-      if (fs.existsSync(this.path)) {
-        const data = await fs.promises.readFile(this.path, "utf-8");
-        const products = JSON.parse(data);
-        let prod;
-        for (let index = 0; index < products.length; index++) {
-          let producto = products[index];
-          if (producto.id === id) {
-            prod = producto;
-          }
-        }
-        if (prod) {
-          return prod;
-        } else {
-          return console.error("Not found");
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
+
   };
 
   updateProduct = async (

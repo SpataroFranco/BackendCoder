@@ -25,10 +25,10 @@ const devolverObjeto = (
     hasPrevPage: hasPrevPage,
     hasNextPage: hasNextPage,
     prevLink: hasPrevPage
-      ? "/api/products?page=" + prevPage + "&limit=" + limit
+      ? "/products?page=" + prevPage + "&limit=" + limit
       : null,
     nextLink: hasNextPage
-      ? "/api/products?page=" + nextPage + "&limit=" + limit
+      ? "/products?page=" + nextPage + "&limit=" + limit
       : null,
   });
 };
