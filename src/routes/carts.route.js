@@ -3,11 +3,13 @@ import cartModel from "../dao/models/carts.model.js";
 
 const router = Router();
 
+//Devuelve todos los carritos
 router.get("/", async (req, res) => {
   const result = await cartModel.find();
   res.send({ Carritos: result });
 });
 
+//Crea un carrito nuevo
 router.post("/", async (req, res) => {
   const carrito = req.body;
 
@@ -29,6 +31,12 @@ router.get("/:cid", async (req, res) => {
 
   if (cart.products.length > 0) {
     return res.render("cart", { cart });
+  } else {
+    return res.send({
+      code: 404,
+      status: "Error",
+      message: "El carrito: " + cid + " se encuentra vacío",
+    });
   }
 });
 
@@ -63,16 +71,25 @@ router.put("/:cid/products/:pid", async (req, res) => {
 
 //Actualiza el carrito con un arreglo de productos
 router.put("/:cid", async (req, res) => {
-  const carritoNuevo = req.body;
   const cid = req.params.cid;
+  try {
+    const carritoNuevo = req.body;
 
-  const cart = await cartModel.findOne({ _id: cid });
+    const cart = await cartModel.findOne({ _id: cid });
+    if (cart) {
+      cart.products = carritoNuevo;
 
-  cart.products = carritoNuevo;
+      await cartModel.updateOne({ _id: cid }, { $set: cart });
 
-  await cartModel.updateOne({ _id: cid }, { $set: cart });
-
-  res.send({ code: 202, status: "Success", message: cart.products });
+      res.send({ code: 202, status: "Success", message: cart.products });
+    }
+  } catch (error) {
+    return res.send({
+      code: 404,
+      status: "Error",
+      message: "El carrito con el id: " + cid + " no existe",
+    });
+  }
 });
 
 //Elimina del carrito el producto seleccionado

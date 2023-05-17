@@ -33,6 +33,7 @@ const devolverObjeto = (
   });
 };
 
+//Devuelve el objeto con la información pedida
 router.get("/", async (req, res) => {
   const { limit = 10, page = 1, query, sort } = req.query;
 
@@ -126,12 +127,14 @@ router.get("/", async (req, res) => {
   }
 });
 
+//Vista de los productos
 router.get("/products", async (req, res) => {
   const { limit = 10, page = 1 } = req.query;
 
   const { docs, hasPrevPage, hasNextPage, nextPage, prevPage, totalDocs } =
     await productoModel.paginate({}, { limit: limit, page, lean: true });
   const products = docs;
+
   res.render("products", {
     products,
     hasPrevPage,
@@ -143,6 +146,7 @@ router.get("/products", async (req, res) => {
   });
 });
 
+//Devuelve el producto con el pid especificado
 router.get("/products/:pid", async (req, res) => {
   const pid = req.params.pid;
 
@@ -160,6 +164,7 @@ router.get("/products/:pid", async (req, res) => {
   }
 });
 
+//Agrega un producto pasado por el body
 router.post("/products", async (req, res) => {
   const { title, description, price, status, thumbnail, code, stock } =
     req.body;
@@ -179,6 +184,7 @@ router.post("/products", async (req, res) => {
   res.send({ result });
 });
 
+//Actualiza un producto pasado por el body
 router.put("/:pid", async (req, res) => {
   const id = req.params.pid;
   const updateProducto = req.body;
@@ -194,6 +200,7 @@ router.put("/:pid", async (req, res) => {
   }
 });
 
+//Elimina un producto por el pid pasado por params
 router.delete("/:pid", async (req, res) => {
   const id = req.params.pid;
 
