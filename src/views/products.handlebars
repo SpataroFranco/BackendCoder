@@ -1,42 +1,50 @@
-<div className="navbar">
-  <div className="links">
-    <div className="section">
-      <a href="/products"> Productos </a>
-      <a href="/api/carts"> Carts </a>
-      <a href="/api/chats"> Chat </a>
-    </div>
+<div class="containerProducts">
+  <div class="dataUser">
+    <h2>Bienvenido {{user.name}}</h2>
+    <p>Tu email es: {{user.email}}</p>
+    <p>Tu edad es: {{user.age}}</p>
+    <h3>Usted es un {{user.rol}}</h3>
+    <a href="/api/session/logout"><button class="btn">Salir</button></a>
+  </div>
+
+  <div>
+    <h1>Productos:</h1>
+  </div>
+  <div class="container">
+    {{#each products}}
+      <div class="product">
+        <p> {{this.title}} </p>
+        {{#each this.thumbnail}}
+          <p> <img src="{{this}}" class="imgProduct" alt="img"/></p>
+        {{/each}}
+
+        <p> {{this.description}} </p>
+        <p> {{this.category}} </p>
+        <div>
+          <p> {{this.price}}$</p>
+          <p> Stock: {{this.stock}} </p>
+        </div>
+        <div>
+          <button class="btn">Agregar al carrito</button>
+        </div>
+      </div>
+
+    {{/each}}
+  </div>
+
+  <div class="page">
+    {{#if hasPrevPage}}
+      <a href="/profile/products?page={{prevPage}}&limit={{limit}}"><button>
+          Anterior
+        </button></a>
+    {{/if}}
+
+    {{#if hasNextPage}}
+      <a href="/profile/products?page={{nextPage}}&limit={{limit}}"><button>
+          Siguiente
+        </button></a>
+    {{/if}}
   </div>
 </div>
-<div>
-    <h1>Productos:</h1>
-</div>
-<div class="container">
-  {{#each products}}
-    <div class="product">
-      <p> {{this.title}} </p>
-      <p> {{this.thumbnail}} </p>
-      <p> {{this.description}} </p>
-       <p> {{this.category}} </p>
-      <div>
-        <p> {{this.price}} </p>
-        <p> {{this.stock}} </p>
-      </div>
-      <div class="boton">
-        <button>Agregar al carrito</button>
-      </div>
-    </div>
 
-  {{/each}}
-</div>
-
-<div class="page">
-  {{#if hasPrevPage}}
-    <a href="/products?page={{prevPage}}&limit={{limit}}"><button> Anterior </button></a>
-  {{/if}}
-
-  {{#if hasNextPage}}
-    <a href="/products?page={{nextPage}}&limit={{limit}}"><button> Siguiente </button></a>
-  {{/if}}
-</div>
-
-<script src="/js/products.js"></script>
+<link rel="stylesheet" href="/css/products.css" />

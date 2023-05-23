@@ -1,0 +1,46 @@
+body {
+  background-color: #f2ebe3;
+}
+
+.containerRegister {
+  border-radius: 24px;
+  margin: 8%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.containerRegister h1{
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
+    padding: 0;
+    height: 12px;
+    border-radius: 24px;
+    justify-content: center;
+    align-items: center;
+    background-color: burlywood;
+}
+
+.form form{
+    display: flex;
+    flex-direction: column;
+}
+
+.form p{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form input {
+    display: flex;
+    flex-direction: column;
+    margin: 2rem;
+    padding: 2rem;
+    border: 0;
+    border-bottom: 1px solid burlywood;
+  }
