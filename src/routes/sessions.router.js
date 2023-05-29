@@ -1,57 +1,101 @@
-import { Router } from 'express';
-import userModel from '../dao/models/user.model.js';
+import { Router } from "express";
+import userModel from "../dao/models/user.model.js";
+import { createHash } from "../utils.js";
+import passport from "passport";
 
 const router = Router();
 
-router.post('/register', async (req, res) =>{
+router.post(
+  "/register",
+  passport.authenticate("register", { failureRedirect: "/failregister" }),
+  async (req, res) => {
+    res.send({ status: "succes", message: "User registered" });
+  }
+);
 
-    const {first_name, last_name, email, age, password} = req.body;
+router.get("/failregister", async (req, res) => {
+  console.log("Fallo en el registro");
+  res.send({ error: "Error en el registro" });
+});
 
-    const exist = await userModel.findOne({email});
-    if(exist){
-        return res.status(400).send({status:"error", error:"User already exists"});
+router.post(
+  "/",
+  passport.authenticate("login", { failureRedirect: "/faillogin" }),
+  async (req, res) => {
+    if (!req.user)
+      return res
+        .status(400)
+        .send({ status: "error", error: "Invalid credentials" });
+
+    if (req.user.email === "adminCoder@coder.com") {
+      req.session.user = {
+        name: req.user.first_name + " " + req.user.last_name,
+        age: req.user.age,
+        email: req.user.email,
+        rol: "admin",
+      };
+    } else {
+      req.session.user = {
+        name: req.user.first_name + " " + req.user.last_name,
+        age: req.user.age,
+        email: req.user.email,
+        rol: "user",
+      };
     }
-    const user = {
-        first_name, last_name, email, age, password
-    };
 
-    await userModel.create(user);
-    res.send({status:"succes", message:"User registered"});
+    res.send({
+      status: "success",
+      payload: req.user,
+      message: "Primer logueo!!",
+    });
+  }
+);
 
-})
+router.get("/faillogin", async (req, res) => {
+  console.log("Fallo en el ingreso");
+  res.send({ error: "Error en el ingreso" });
+});
 
-router.post('/', async (req,res)=>{
-    const { email, password } = req.body;
-    const user = await userModel.findOne({email,password})
+router.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err)
+      return res
+        .status(500)
+        .send({ status: "error", error: "No pudo cerrar sesion" });
+    res.redirect("/");
+  });
+});
 
-    if(!user){
-        return res.status(400).send({status:"error", error:"Datos incorrectos"})
-    }
+router.post("/restartPassword", async (req, res) => {
+  const { email, password } = req.body;
 
-    if(user.email === "adminCoder@coder.com" && user.password === "adminCod3r123" ){
-        req.session.user = {
-            name: `${user.first_name} ${user.last_name}`,
-            email: user.email,
-            age: user.age,
-            rol:"admin"
-        }
-    }else{
-        req.session.user = {
-            name: `${user.first_name} ${user.last_name}`,
-            email: user.email,
-            age: user.age,
-            rol:"user"
-        }
-    }
-    res.send({status:"success", payload:req.res.user, message:"Primer logueo!!"})
-    
-})
+  if (!email || !password)
+    return res
+      .status(400)
+      .send({ status: "error", error: "Datos incorrectos" });
 
-router.get('/logout', (req,res)=>{
-    req.session.destroy(err =>{
-        if(err) return res.status(500).send({status:"error", error:"No pudo cerrar sesion"})
-        res.redirect('/');
-    })
+  const user = await userModel.findOne({ email });
+
+  if (!user)
+    return res
+      .status(400)
+      .send({ status: "error", error: "Datos incorrectos" });
+
+  const newHashedPassword = createHash(password);
+
+  await userModel.updateOne(
+    { _id: user._id },
+    { $set: { password: newHashedPassword } }
+  );
+
+  res.send({ status: "success", message: "Contraseña actualizada" });
+});
+
+router.get("/github", passport.authenticate("github", {scope:["user:email"]}), async (req, res)=>{})
+
+router.get("/githubcallback", passport.authenticate("github",{failureRedirect:"/"}), async (req, res)=>{
+  req.session.user = req.user;
+  res.redirect("/");
 })
 
 export default router;

@@ -1,5 +1,6 @@
 import express from "express";
 import handlebars from "express-handlebars";
+import passport from "passport";
 import { Server } from "socket.io";
 import __dirname from "./utils.js";
 import chatModel from "./dao/models/messages.model.js";
@@ -11,6 +12,7 @@ import cartsRouter from "./routes/carts.route.js";
 import chatsRouter from "./routes/chats.route.js";
 import viewRouter from "./routes/views.router.js";
 import sessionRouter from "./routes/sessions.router.js";
+import initializePassport from "./config/passport.config.js";
 
 
 //Coneccion a la base de datos "ecommerce"
@@ -42,6 +44,10 @@ app.use(session({
   saveUninitialized:false
 }))
 
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 //Vistas
 app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
@@ -50,10 +56,9 @@ app.set("view engine", "handlebars");
 //Rutas
 //Vistas con DB
 //app.use("/", productsRouter);
+app.use("/", viewRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/chats", chatsRouter);
-
-app.use("/", viewRouter);
 app.use("/api/session", sessionRouter);
 
 //IO

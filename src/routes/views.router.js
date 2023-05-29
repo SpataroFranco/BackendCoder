@@ -40,4 +40,8 @@ router.get("/profile/products", privateAcces, async (req, res) => {
   });
 });
 
+router.get("/resetPassword", publicAcces, (req, res) =>{
+  res.render("resetPassword")
+})
+
 export default router;
