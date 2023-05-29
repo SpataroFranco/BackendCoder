@@ -29,14 +29,14 @@ router.post(
 
     if (req.user.email === "adminCoder@coder.com") {
       req.session.user = {
-        name: req.user.first_name + " " + req.user.last_name,
+        first_name: req.user.first_name + " " + req.user.last_name,
         age: req.user.age,
         email: req.user.email,
         rol: "admin",
       };
     } else {
       req.session.user = {
-        name: req.user.first_name + " " + req.user.last_name,
+        first_name: req.user.first_name + " " + req.user.last_name,
         age: req.user.age,
         email: req.user.email,
         rol: "user",
@@ -91,7 +91,7 @@ router.post("/restartPassword", async (req, res) => {
   res.send({ status: "success", message: "Contraseña actualizada" });
 });
 
-router.get("/github", passport.authenticate("github", {scope:["user:email"]}), async (req, res)=>{})
+router.get("/github", passport.authenticate("github"), async (req, res)=>{})
 
 router.get("/githubcallback", passport.authenticate("github",{failureRedirect:"/"}), async (req, res)=>{
   req.session.user = req.user;

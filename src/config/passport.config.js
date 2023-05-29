@@ -75,19 +75,21 @@ const initializePassport = () => {
         clientID: "Iv1.2168180f78cffeaf",
         clientSecret: "2d0227fa27cef25fe01f29880eb581755bcc2972",
         callbackURL: "http://localhost:8080/api/session/githubcallback",
+        scope: ["user:email"]
       },
       async (accesToken, refreshToken, profile, done) => {
         try {
-          console.log(profile); //vemos la info que nos da GitHub
-          const user = await userModel.find({ email: profile._json.email });
+          const email = profile.emails[0].value;
+          const user = await userModel.findOne({ email: email });
 
           if (!user) {
             const newUser = {
               first_name: profile._json.name,
               last_name: "",
-              email: profile._json.email,
+              email:email,
               age: 18,
               password: "",
+              rol:"user"
             };
             const result = await userModel.create(newUser);
             done(null, result);
