@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 
-const collection = 'User';
+const collection = "User";
 
 const schema = new mongoose.Schema({
   first_name: {
@@ -15,6 +15,7 @@ const schema = new mongoose.Schema({
   email: {
     type: String,
     require: true,
+    unique: true,
   },
   age: {
     type: Number,
@@ -24,10 +25,26 @@ const schema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  rol:{
+  rol: {
     type: String,
     require: true,
-  }
+    default: "user",
+  },
+  cart: {
+    type: [
+      {
+        cart: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "carts",
+        },
+      }
+    ],
+    default: [],
+  },
+});
+
+schema.pre("find", function () {
+  this.populate("cart.cart");
 });
 
 schema.plugin(mongoosePaginate);

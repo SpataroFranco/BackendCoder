@@ -55,8 +55,10 @@ app.set("view engine", "handlebars");
 
 //Rutas
 //Vistas con DB
+const viewsRouter = new viewRouter();
+
 //app.use("/", productsRouter);
-app.use("/", viewRouter);
+app.use("/", viewsRouter.getRouter());
 app.use("/api/carts", cartsRouter);
 app.use("/api/chats", chatsRouter);
 app.use("/api/session", sessionRouter);

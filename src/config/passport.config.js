@@ -12,8 +12,7 @@ const initializePassport = () => {
     new LocalStrategy(
       { passReqToCallback: true, usernameField: "email" },
       async (req, username, password, done) => {
-        const { first_name, last_name, email, age } = req.body;
-
+        const { first_name, last_name, email, age, rol, cart } = req.body;
         try {
           const user = await userModel.findOne({ email: username });
           if (user) {
@@ -26,7 +25,12 @@ const initializePassport = () => {
             email,
             age,
             password: createHash(password),
+            rol,
+            cart
           };
+          if(newUser.rol == ""){
+            newUser.rol = "user";
+          }
           const result = await userModel.create(newUser);
           return done(null, result);
         } catch (error) {
@@ -89,7 +93,8 @@ const initializePassport = () => {
               email:email,
               age: 18,
               password: "",
-              rol:"user"
+              rol:"user",
+              cart:[]
             };
             const result = await userModel.create(newUser);
             done(null, result);

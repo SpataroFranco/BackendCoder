@@ -27,21 +27,13 @@ router.post(
         .status(400)
         .send({ status: "error", error: "Invalid credentials" });
 
-    if (req.user.email === "adminCoder@coder.com") {
-      req.session.user = {
-        first_name: req.user.first_name + " " + req.user.last_name,
-        age: req.user.age,
-        email: req.user.email,
-        rol: "admin",
-      };
-    } else {
-      req.session.user = {
-        first_name: req.user.first_name + " " + req.user.last_name,
-        age: req.user.age,
-        email: req.user.email,
-        rol: "user",
-      };
-    }
+    req.session.user = {
+      first_name: req.user.first_name + " " + req.user.last_name,
+      age: req.user.age,
+      email: req.user.email,
+      rol: req.user.rol,
+      cart: req.user.cart
+    };
 
     res.send({
       status: "success",
@@ -91,11 +83,15 @@ router.post("/restartPassword", async (req, res) => {
   res.send({ status: "success", message: "Contraseña actualizada" });
 });
 
-router.get("/github", passport.authenticate("github"), async (req, res)=>{})
+router.get("/github", passport.authenticate("github"), async (req, res) => {});
 
-router.get("/githubcallback", passport.authenticate("github",{failureRedirect:"/"}), async (req, res)=>{
-  req.session.user = req.user;
-  res.redirect("/");
-})
+router.get(
+  "/githubcallback",
+  passport.authenticate("github", { failureRedirect: "/" }),
+  async (req, res) => {
+    req.session.user = req.user;
+    res.redirect("/");
+  }
+);
 
 export default router;
