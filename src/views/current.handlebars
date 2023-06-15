@@ -1,0 +1,18 @@
+<div class="containerProducts">
+<div class="dataUser">
+  <h2>Bienvenido {{user.first_name}}</h2>
+  <p>Tu email es: {{user.email}}</p>
+  <p>Tu edad es: {{user.age}}</p>
+  <p>Carrito:
+    {{#each cartUser.cart}}
+      {{this.cart._id}}
+    {{/each}}
+  </p>
+  <h3>Usted es un {{user.rol}}</h3>
+  <a href="/profile/products"><button class="btn">Productos</button></a>
+  <a href="/api/session/logout"><button class="btn">Salir</button></a>
+</div>
+
+</div>
+
+<link rel="stylesheet" href="/css/products.css" />

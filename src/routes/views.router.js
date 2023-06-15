@@ -44,6 +44,16 @@ export default class viewsRouter extends Routers {
       });
     });
 
+    this.get("/profile/current", privateAcces, async (req, res) => {
+
+      const cartUser = await userModel.findOne({ email: req.session.user.email }).populate("cart.cart").lean();
+
+      res.render("current",{
+        user: req.session.user,
+        cartUser
+      });
+    })
+
     this.get("/resetPassword", publicAcces, (req, res) => {
       res.render("resetPassword");
     });
