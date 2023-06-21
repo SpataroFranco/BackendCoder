@@ -7,19 +7,18 @@ import chatModel from "./dao/models/messages.model.js";
 import mongoose from "mongoose";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import productsRouter from "./routes/products.route.js";
 import cartsRouter from "./routes/carts.route.js";
 import chatsRouter from "./routes/chats.route.js";
 import viewRouter from "./routes/views.router.js";
 import sessionRouter from "./routes/sessions.router.js";
 import initializePassport from "./config/passport.config.js";
-
+import { config } from "./config/config.js";
+// import productsRouter from "./routes/products.route.js";
 
 //Coneccion a la base de datos "ecommerce"
-const DB = "ecommerce";
-const MONGO = "mongodb+srv://francoSP:franco@cluster0.5fykqvu.mongodb.net/"+DB;
+const MONGO = config.mongo.url;
 
-const PORT = process.env.PORT || 8080;
+const PORT = config.server.port;
 
 const app = express();
 
@@ -34,15 +33,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 
-app.use(session({
-  store: new MongoStore({
+app.use(
+  session({
+    store: new MongoStore({
       mongoUrl: MONGO,
-      ttl:3600
-  }),
-  secret:'CoderSecret',
-  resave:false,
-  saveUninitialized:false
-}))
+      ttl: 3600,
+    }),
+    secret: config.server.clave_secreta,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 initializePassport();
 app.use(passport.initialize());
@@ -56,30 +57,33 @@ app.set("view engine", "handlebars");
 //Rutas
 //Vistas con DB
 const viewsRouter = new viewRouter();
+const sessionsRouter = new sessionRouter();
+const cartRouter = new cartsRouter();
+const chatRouter = new chatsRouter();
 
-//app.use("/", productsRouter);
+// app.use("/", productsRouter);
 app.use("/", viewsRouter.getRouter());
-app.use("/api/carts", cartsRouter);
-app.use("/api/chats", chatsRouter);
-app.use("/api/session", sessionRouter);
+app.use("/api/carts", cartRouter.getRouter());
+app.use("/api/chats", chatRouter.getRouter());
+app.use("/api/session", sessionsRouter.getRouter());
 
 //IO
 const io = new Server(server);
 
 io.on("connection", (socket) => {
-  console.log("Cliente conectado"); 
+  console.log("Cliente conectado");
 
-  socket.on("messageChat", async data =>{
+  socket.on("messageChat", async (data) => {
     const chat = { user: data.user, message: data.message };
-  
+
     await chatModel.create(chat);
 
     const mensajes = await chatModel.find();
 
     io.sockets.emit("messageLista", mensajes);
-  })
+  });
 
-  socket.on("authenticated", data =>{
+  socket.on("authenticated", (data) => {
     socket.broadcast.emit("newUserConnected", data);
-  })
+  });
 });

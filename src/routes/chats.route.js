@@ -1,10 +1,8 @@
-import { Router } from "express";
+import Routers from "./router.js";
+import { getChatsController } from "../controllers/chats.controller.js";
 
-const router = Router();
-
-router.get("/", async (req, res) => {
-
-  res.render("chat", {});
-});
-
-export default router;
+export default class chatsRouter extends Routers {
+  init() {
+    this.get("/", getChatsController);
+  }
+}
