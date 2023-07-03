@@ -1,27 +1,22 @@
-import cartModel from "../dao/models/carts.model.js";
+import CarritoManager from "../dao/managers/CarritoManager.js";
+
+const managerCart = new CarritoManager();
 
 export const getCartsController = async (req, res) => {
-  const result = await cartModel.find();
+  const result = await managerCart.getCarts();
   res.send({ Carritos: result });
 };
 
 export const postCartController = async (req, res) => {
-  const carrito = req.body;
-
-  await cartModel.create(carrito);
-
+  const newCart = managerCart.addCart(req.body);
   res.send({
     status: "Success",
-    carrito,
+    payload: newCart,
   });
 };
 
 export const getCartController = async (req, res) => {
-  const cid = req.params.cid;
-  const cart = await cartModel
-    .findById(cid)
-    .populate("products.product")
-    .lean();
+  const cart = await managerCart.getCartById(req.params.cid);
 
   if (cart.products.length > 0) {
     return res.render("cart", { cart });
@@ -29,7 +24,7 @@ export const getCartController = async (req, res) => {
     return res.send({
       code: 404,
       status: "Error",
-      message: "El carrito: " + cid + " se encuentra vacío",
+      message: "El carrito: " + cart._id + " se encuentra vacío",
     });
   }
 };
@@ -37,27 +32,9 @@ export const getCartController = async (req, res) => {
 export const putProductsToCartController = async (req, res) => {
   const cantidad = req.body;
   const cid = req.params.cid;
-  const pid = req.params.pid;
+  const productId = req.params.pid;
 
-  const cart = await cartModel.findOne({ _id: cid });
-
-  const prodIndex = cart.products.findIndex((cprod) => cprod.product == pid);
-
-  const quantity = cantidad.cantidad;
-  parseInt(quantity);
-
-  if (prodIndex === -1) {
-    const product = {
-      product: pid,
-      quantity: quantity,
-    };
-    cart.products.push(product);
-  } else {
-    let total = cart.products[prodIndex].quantity;
-    cart.products[prodIndex].quantity = total + quantity;
-  }
-
-  await cartModel.updateOne({ _id: cid }, { $set: cart });
+  const cart = managerCart.addProductToCart(cid, productId, cantidad);
 
   res.send({ res: cart.products });
 };
@@ -65,22 +42,11 @@ export const putProductsToCartController = async (req, res) => {
 export const putCartController = async (req, res) => {
   const cid = req.params.cid;
   try {
-    const carritoNuevo = req.body;
+    const newCart = req.body;
 
-    const cart = await cartModel.findOne({ _id: cid });
-    if (cart) {
-      cart.products = carritoNuevo;
-
-      await cartModel.updateOne({ _id: cid }, { $set: cart });
-
-      res.send({ code: 202, status: "Success", message: cart.products });
-    }
+    await managerCart.addProductsToCart(cid, newCart, res);
   } catch (error) {
-    return res.send({
-      code: 404,
-      status: "Error",
-      message: "El carrito con el id: " + cid + " no existe",
-    });
+    console.log(error);
   }
 };
 
@@ -88,32 +54,28 @@ export const deleteProductToCartController = async (req, res) => {
   const cid = req.params.cid;
   const pid = req.params.pid;
 
-  const cart = await cartModel.findOne({ _id: cid });
-
-  const prodIndex = cart.products.findIndex((cprod) => cprod.product == pid);
-
-  if (prodIndex === -1) {
-    return res.send({
-      code: 404,
-      status: "Error",
-      message: "El producto no existe en el carrito",
-    });
-  } else {
-    cart.products.splice(prodIndex, 1);
-    await cartModel.updateOne({ _id: cid }, { $set: cart });
-
-    res.send({ code: 202, status: "Success", message: cart.products });
+  try {
+    await managerCart.deleteProductToCart(cid, pid, res);
+  } catch (error) {
+    console.log(error);
   }
 };
 
 export const deleteProductsToCartController = async (req, res) => {
   const cid = req.params.cid;
 
-  const cart = await cartModel.findOne({ _id: cid });
-
-  cart.products.splice(0, cart.products.length);
-
-  await cartModel.updateOne({ _id: cid }, { $set: cart });
+  try {
+    await managerCart.deleteProductsToCart(cid);
+  } catch (error) {
+    console.log(error);
+  }
 
   res.send({ code: 202, status: "Success", message: cart.products });
+};
+
+export const finishBuy = async (req, res) => {
+  res.render("purchase", {
+    cart: req.params.cid,
+    //valores del carrito
+  });
 };

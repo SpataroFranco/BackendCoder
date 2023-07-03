@@ -8,18 +8,27 @@
   <div class="container">
     {{#each products}}
       <div class="product">
-        <p> {{this.title}} </p>
+        <p>{{this.title}}</p>
         {{#each this.thumbnail}}
-          <p> <img src="{{this}}" class="imgProduct" alt="img" /></p>
+          <p><img src="{{this}}" class="imgProduct" alt="img" /></p>
         {{/each}}
-        <p> {{this.description}} </p>
-        <p> {{this.category}} </p>
+        <p>{{this.description}}</p>
+        <p>{{this.category}}</p>
         <div>
-          <p> {{this.price}}$</p>
-          <p> Stock: {{this.stock}} </p>
+          <p>{{this.price}}$</p>
+          <p>Stock: {{this.stock}}</p>
         </div>
         <div>
-          <button class="btn">Agregar al carrito</button>
+          <button
+            class="btn"
+            id="add-to-cart-{{this.id}}"
+            data-product-id="{{this.id}}"
+            data-product-title="{{this.title}}"
+            data-product-price="{{this.price}}"
+            data-product-stock="{{this.stock}}"
+          >
+            Agregar al carrito
+          </button>
         </div>
       </div>
     {{/each}}
@@ -45,3 +54,4 @@
 </div>
 
 <link rel="stylesheet" href="/css/products.css" />
+<script src="/js/cart.js"></script>

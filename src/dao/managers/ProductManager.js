@@ -1,196 +1,208 @@
-import fs from "fs";
 import productoModel from "../models/products.model.js";
 
 class ProductManager {
   constructor() {
-    this.path = "files/Products.json";
+    this.model = productoModel;
   }
 
-  getProducts = async () => {
-
+  //Funcion que identifica el tipo de respuesta para devolver el objeto segun el criterio pasado por query
+  devolverObjeto = (
+    res,
+    totalDocs,
+    prevPage,
+    nextPage,
+    page,
+    hasNextPage,
+    hasPrevPage,
+    limit,
+    result
+  ) => {
+    res.send({
+      status: "success",
+      payload: result,
+      totalPages: totalDocs,
+      prevPage: prevPage,
+      nextPage: nextPage,
+      page: page,
+      hasPrevPage: hasPrevPage,
+      hasNextPage: hasNextPage,
+      prevLink: hasPrevPage
+        ? "/products?page=" + prevPage + "&limit=" + limit
+        : null,
+      nextLink: hasNextPage
+        ? "/products?page=" + nextPage + "&limit=" + limit
+        : null,
+    });
   };
 
-  validarDatos(title, description, price, status, thumbnail, code, stock) {
-    if (title == "" || title == null) {
-      console.log("Por favor ingrese un titulo");
-    }
-    if (description == "" || description == null) {
-      console.log("Por favor ingrese una descripcion");
-    }
-    if (price == "" || price == null) {
-      console.log("Por favor ingrese un precio");
-    }
-    if (status != true || status != false) {
-      console.log("Status debe ser true o false");
-    }
-    if (thumbnail == "" || thumbnail == null) {
-      thumbnail = [];
-    }
-    if (stock == "" || stock == null) {
-      console.log("Por favor ingrese un stock");
-    }
-    if (code == "" || code == null) {
-      console.log("Por favor ingrese un codigo identificador");
-    }
-  }
+  getProductsObject = async (limit, page, query, sort, res) => {
+    const { docs, hasPrevPage, hasNextPage, nextPage, prevPage, totalDocs } =
+      await this.model.paginate({}, { limit: limit, page, lean: true });
 
-  addProduct = async (producto) => {
+    const products = docs;
+
     try {
-      const productos = await this.getProducts();
+      if (sort == "desc") {
+        const result = await this.model.aggregate([
+          { $group: { _id: "$price", products: { $push: "$$ROOT" } } },
+          { $sort: { _id: -1 } },
+        ]);
 
-      if (
-        !producto.title ||
-        !producto.description ||
-        !producto.price ||
-        !producto.thumbnail ||
-        !producto.status ||
-        !producto.code ||
-        !producto.stock
-      ) {
-        this.validarDatos(
-          producto.title,
-          producto.description,
-          producto.price,
-          producto.status,
-          producto.thumbnail,
-          producto.code,
-          producto.stock
+        devolverObjeto(
+          res,
+          totalDocs,
+          prevPage,
+          nextPage,
+          page,
+          hasNextPage,
+          hasPrevPage,
+          limit,
+          result
+        );
+      } else if (sort == "asc") {
+        const result = await this.model.aggregate([
+          { $group: { _id: "$price", products: { $push: "$$ROOT" } } },
+          { $sort: { _id: 1 } },
+        ]);
+
+        devolverObjeto(
+          res,
+          totalDocs,
+          prevPage,
+          nextPage,
+          page,
+          hasNextPage,
+          hasPrevPage,
+          limit,
+          result
+        );
+      } else if (query == "category") {
+        const result = await this.model.aggregate([
+          { $group: { _id: "$category", products: { $push: "$$ROOT" } } },
+        ]);
+
+        devolverObjeto(
+          res,
+          totalDocs,
+          prevPage,
+          nextPage,
+          page,
+          hasNextPage,
+          hasPrevPage,
+          limit,
+          result
+        );
+      } else if (query == "status") {
+        const result = await this.model.aggregate([
+          { $group: { _id: "$status", products: { $push: "$$ROOT" } } },
+        ]);
+
+        devolverObjeto(
+          res,
+          totalDocs,
+          prevPage,
+          nextPage,
+          page,
+          hasNextPage,
+          hasPrevPage,
+          limit,
+          result
         );
       } else {
-        let codigoProducto;
-        for (let index = 0; index < productos.length; index++) {
-          let prod = productos[index];
-          if (prod.code === producto.code) {
-            codigoProducto = code;
-          } else {
-            codigoProducto = null;
-          }
-        }
-
-        if (codigoProducto) {
-          console.log("Ya hay un producto con ese codigo identificador");
-        } else {
-          if (productos.length === 0) {
-            producto.id = 1;
-          } else {
-            producto.id = productos[productos.length - 1].id + 1;
-          }
-          productos.push(producto);
-        }
+        devolverObjeto(
+          res,
+          totalDocs,
+          prevPage,
+          nextPage,
+          page,
+          hasNextPage,
+          hasPrevPage,
+          limit,
+          products
+        );
       }
-
-      await fs.promises.writeFile(
-        this.path,
-        JSON.stringify(productos, null, "\t")
-      );
     } catch (error) {
-      console.log(error);
+      console.error(err);
     }
   };
 
-  getProductById = async (id) => {
+  getProducts = async (limit, page, res) => {
+    const { docs, hasPrevPage, hasNextPage, nextPage, prevPage, totalDocs } =
+      await this.model.paginate({}, { limit: limit, page, lean: true });
+    const products = docs;
 
+    res.render("products", {
+      products,
+      hasPrevPage,
+      hasNextPage,
+      prevPage,
+      nextPage,
+      totalDocs,
+      limit,
+    });
   };
 
-  updateProduct = async (
-    idProd,
-    titulo,
-    descripcion,
-    precio,
+  getProduct = async (pid, res) => {
+    try {
+      const result = await productoModel.find({ _id: pid });
+
+      if (result.length > 0) {
+        return res.status(200).send({ status: "sucess", result });
+      }
+    } catch (error) {
+      res.status(400).send({
+        status: "error",
+        error: "El producto con id: " + pid + " no existe",
+      });
+    }
+  };
+
+  postProduct = async (
+    title,
+    description,
+    price,
     status,
     thumbnail,
     code,
     stock
   ) => {
-    let productos = await this.getProducts();
+    const producto = {
+      title,
+      description,
+      price,
+      status,
+      thumbnail,
+      code,
+      stock,
+    };
 
-    const productoIndex = productos.findIndex((producto) => {
-      return producto.id == idProd;
-    });
+    return await this.model.create(producto);
+  };
 
-    productos[productoIndex].title = titulo;
-    productos[productoIndex].description = descripcion;
-    productos[productoIndex].price = precio;
-    productos[productoIndex].status = status;
-    productos[productoIndex].thumbnail = thumbnail;
-    productos[productoIndex].code = code;
-    productos[productoIndex].stock = stock;
-
+  putProduct = async (pid, producto, res) => {
     try {
-      await fs.promises.writeFile(
-        this.path,
-        JSON.stringify(productos, null, "\t")
+      const result = await this.model.updateOne(
+        { _id: pid },
+        { $set: producto }
       );
-      return "Producto modificado";
+      res.send({ result });
     } catch (error) {
-      return error;
+      return res.send({ error: "id no encontrado" });
     }
   };
 
-  deleteProduct = async (idProd) => {
+  deleteProduct = async (pid, res) => {
     try {
-      const productos = await this.getProducts();
-      const producto = await this.getProductById(idProd);
-      let i = 0;
-      let encontrado = false;
-      while (i <= productos.length && !encontrado) {
-        if (productos[i].id == producto.id) {
-          productos.splice(i, 1);
-          encontrado = true;
-        } else {
-          ++i;
-        }
-      }
-      await fs.promises.writeFile(
-        this.path,
-        JSON.stringify(productos, null, "\t")
-      );
+      await productoModel.deleteOne({ _id: pid });
+  
+      res.send({
+        status: "Success",
+        message: "Producto borrado",
+      });
     } catch (error) {
-      console.log(error);
+      return res.send({ error: "Producto no encontrado" });
     }
   };
 }
 
 export default ProductManager;
-
-// const p = new ProductManager();
-// console.log(await p.getProducts());
-// console.log("-----------------------------------");
-// let producto = {
-//   title: "producto prueba",
-//   description: "Este es un producto prueba",
-//   price: 300,
-//   thumbnail: "Sin imagen",
-//   code: "abc123",
-//   stock: 10,
-// };
-
-// let producto2 = {
-//   title: "producto prueba 2",
-//   description: "Este es un producto prueba",
-//   price: 600,
-//   thumbnail: "Sin imagen",
-//   code: "bce342",
-//   stock: 20,
-// };
-// console.log(producto2["code"])
-// await p.addProduct(producto);
-// await p.addProduct(producto2);
-// console.log(await p.getProducts());
-// console.log("-----------------------------------");
-// console.log(await p.getProductById(10));
-// console.log("-----------------------------------");
-// console.log(await p.getProductById(2));
-// console.log("-----------------------------------");
-// let nuevoProducto = {
-//   title: "elNuevo",
-//   description: "aaa",
-//   price: 100,
-//   thumbnail: "no",
-//   code: "codigoo",
-//   stock: 10,
-// };
-// await p.updateProduct(2, nuevoProducto.title,"nn",1200,true,["img1","img2"],"ncode",3300);
-// await p.deleteProduct(1);
-// console.log("-----------------------------------");
-// await p.getProducts();

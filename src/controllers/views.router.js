@@ -1,5 +1,6 @@
 import productoModel from "../dao/models/products.model.js";
 import userModel from "../dao/models/user.model.js";
+import { userService } from "../repository/index.js";
 
 export const publicAcces = (req, res, next) => {
   if (req.session.user) return res.redirect("/profile/products");
@@ -31,6 +32,8 @@ export const getViewsProfileController = async (req, res) => {
     .populate("cart.cart")
     .lean();
 
+  // const cartUser = await userService.getCart({ email: req.session.user.email });
+
   res.render("products", {
     user: req.session.user,
     cartUser,
@@ -50,6 +53,8 @@ export const getViewsCurrentController = async (req, res) => {
     .populate("cart.cart")
     .lean();
 
+  // const cartUser = await userService.getCart();
+
   res.render("current", {
     user: req.session.user,
     cartUser,
@@ -66,12 +71,14 @@ export const putUserController = async (req, res) => {
   try {
     const carritoNuevo = req.body;
 
-    const user = await userModel.findOne({ email: uemail });
+    // const user = await userModel.findOne({ email: uemail });
+    const user = await userService.getUser({ email: uemail });
 
     if (user) {
       user.cart = carritoNuevo;
 
-      await userModel.updateOne({ email: uemail }, { $set: user });
+      // await userModel.updateOne({ email: uemail }, { $set: user });
+      await userService.updateUser(uemail, user);
 
       res.send({ code: 202, status: "Success", message: user.cart });
     }

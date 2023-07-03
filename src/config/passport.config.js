@@ -3,6 +3,7 @@ import local from "passport-local";
 import GitHubStrategy from 'passport-github2';
 import userModel from "../dao/models/user.model.js";
 import { createHash, validatePassword } from "../utils.js";
+import { userService } from "../repository/index.js";
 
 const LocalStrategy = local.Strategy;
 
@@ -14,7 +15,9 @@ const initializePassport = () => {
       async (req, username, password, done) => {
         const { first_name, last_name, email, age, rol, cart } = req.body;
         try {
-          const user = await userModel.findOne({ email: username });
+          
+          const user = await userService.getUser({ email: username });
+          
           if (user) {
             console.log("Usuario existente");
             return done(null, false);
@@ -31,7 +34,9 @@ const initializePassport = () => {
           if(newUser.rol == ""){
             newUser.rol = "user";
           }
-          const result = await userModel.create(newUser);
+          // const result = await userModel.create(newUser);
+          const result = await userService.createUser(newUser);
+        
           return done(null, result);
         } catch (error) {
           return done("Error al registrar el usuario: " + error);
@@ -45,7 +50,8 @@ const initializePassport = () => {
   });
 
   passport.deserializeUser(async (id, done) => {
-    const user = await userModel.findById(id);
+    // const user = await userModel.findById(id);
+    const user = await userService.getUserById(id)
     done(null, user);
   });
 
@@ -55,7 +61,7 @@ const initializePassport = () => {
       { usernameField: "email" },
       async (username, password, done) => {
         try {
-          const user = await userModel.findOne({ email: username });
+          const user = await userService.getUser({ email: username });
 
           if (!user) {
             console.log("No existe el usuario");
@@ -84,7 +90,7 @@ const initializePassport = () => {
       async (accesToken, refreshToken, profile, done) => {
         try {
           const email = profile.emails[0].value;
-          const user = await userModel.findOne({ email: email });
+          const user = await userService.getUser({ email: username });
 
           if (!user) {
             const newUser = {
