@@ -1,6 +1,7 @@
 import productoModel from "../dao/models/products.model.js";
 import userModel from "../dao/models/user.model.js";
 import { userService } from "../repository/index.js";
+import { CreateUserDto } from "../dao/dto/user.dto.js";
 
 export const publicAcces = (req, res, next) => {
   if (req.session.user) return res.redirect("/profile/products");
@@ -53,11 +54,14 @@ export const getViewsCurrentController = async (req, res) => {
     .populate("cart.cart")
     .lean();
 
+    let{ first_name,last_name,email,age,rol} = req.session.user
+    let user = new CreateUserDto({first_name,last_name,email,age,rol})
+
   // const cartUser = await userService.getCart();
 
   res.render("current", {
-    user: req.session.user,
-    cartUser,
+    user,
+    cartUser
   });
 };
 

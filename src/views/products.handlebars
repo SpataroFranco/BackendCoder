@@ -1,7 +1,9 @@
 <div class="containerProducts">
-  <a href="/profile/current"><button class="btn">
+  <a href="/profile/current">
+    <button class="btn">
       Mi Perfil
-    </button></a>
+    </button>
+  </a>
   <div>
     <h1>Productos:</h1>
   </div>
@@ -19,14 +21,9 @@
           <p>Stock: {{this.stock}}</p>
         </div>
         <div>
-          <button
-            class="btn"
-            id="add-to-cart-{{this.id}}"
-            data-product-id="{{this.id}}"
-            data-product-title="{{this.title}}"
-            data-product-price="{{this.price}}"
-            data-product-stock="{{this.stock}}"
-          >
+          <button class="btn addCart"
+          data-id="{{this._id}}"
+          data-cart-id="{{ ../user.cartId }}">
             Agregar al carrito
           </button>
         </div>
@@ -36,19 +33,19 @@
 
   <div class="page">
     {{#if hasPrevPage}}
-      <a href="/profile/products?page={{prevPage}}&limit={{limit}}"><button
-          class="btn"
-        >
+      <a href="/profile/products?page={{prevPage}}&limit={{limit}}">
+        <button class="btn">
           Anterior
-        </button></a>
+        </button>
+      </a>
     {{/if}}
 
     {{#if hasNextPage}}
-      <a href="/profile/products?page={{nextPage}}&limit={{limit}}"><button
-          class="btn"
-        >
+      <a href="/profile/products?page={{nextPage}}&limit={{limit}}">
+        <button class="btn">
           Siguiente
-        </button></a>
+        </button>
+      </a>
     {{/if}}
   </div>
 </div>

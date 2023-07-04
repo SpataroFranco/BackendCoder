@@ -7,6 +7,7 @@ import {
   putProductController,
   deleteProductController,
 } from "../controllers/products.controller.js";
+import { adminAccess } from "../middleware/middleware.js";
 
 const router = Router();
 
@@ -20,12 +21,12 @@ router.get("/products", getProductsController);
 router.get("/products/:pid", getProductController);
 
 //Agrega un producto pasado por el body
-router.post("/products", postProductController);
+router.post("/products", adminAccess, postProductController);
 
 //Actualiza un producto pasado por el body
-router.put("/:pid", putProductController);
+router.put("/:pid",adminAccess, putProductController);
 
 //Elimina un producto por el pid pasado por params
-router.delete("/:pid", deleteProductController);
+router.delete("/:pid",adminAccess, deleteProductController);
 
 export default router;

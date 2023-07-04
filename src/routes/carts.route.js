@@ -7,7 +7,7 @@ import {
   putCartController,
   deleteProductToCartController,
   deleteProductsToCartController,
-  finishBuy,
+  purchaseController
 } from "../controllers/carts.controller.js";
 
 export default class cartsRouter extends Routers {
@@ -33,7 +33,7 @@ export default class cartsRouter extends Routers {
     //Elimina todos los productos del carrito
     this.delete("/:cid", deleteProductsToCartController);
 
-    //Finaliza la compra
-    this.get("/:cid/purchase", finishBuy);
+    this.post("/:cid/purchase", purchaseController)
+
   }
 }

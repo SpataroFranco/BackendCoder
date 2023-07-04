@@ -1,6 +1,8 @@
 import CarritoManager from "../dao/managers/CarritoManager.js";
+import ProductManager from "../dao/managers/ProductManager.js";
 
 const managerCart = new CarritoManager();
+const managerProduct = new ProductManager();
 
 export const getCartsController = async (req, res) => {
   const result = await managerCart.getCarts();
@@ -73,9 +75,7 @@ export const deleteProductsToCartController = async (req, res) => {
   res.send({ code: 202, status: "Success", message: cart.products });
 };
 
-export const finishBuy = async (req, res) => {
-  res.render("purchase", {
-    cart: req.params.cid,
-    //valores del carrito
-  });
-};
+
+export const purchaseController = async (req, res) => {
+  
+}
