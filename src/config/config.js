@@ -6,6 +6,8 @@ const DB = process.env.DB;
 const MONGO = process.env.MONGO_URL+DB;
 const PORT = process.env.PORT || 8080;
 const SECRET_SESSION = process.env.SECRET_SESSION;
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 export const config = {
     server: {
@@ -14,5 +16,9 @@ export const config = {
     },
     mongo: {
         url: MONGO
+    },
+    gmail: {
+        adminAccount: ADMIN_EMAIL,
+        adminPass: ADMIN_PASSWORD
     }
 } 

@@ -157,6 +157,12 @@ class ProductManager {
     }
   };
 
+  getProducto = async (pid) => {
+    const result = await productoModel.find({ _id: pid });
+
+    return result;
+  };
+
   postProduct = async (
     title,
     description,
@@ -194,13 +200,21 @@ class ProductManager {
   deleteProduct = async (pid, res) => {
     try {
       await productoModel.deleteOne({ _id: pid });
-  
+
       res.send({
         status: "Success",
         message: "Producto borrado",
       });
     } catch (error) {
       return res.send({ error: "Producto no encontrado" });
+    }
+  };
+
+  updateStock = async (pid, cantidad) => {
+    try {
+      await this.model.updateOne({ _id: pid }, { $set: { stock: cantidad } });
+    } catch (error) {
+      console.log(error);
     }
   };
 }

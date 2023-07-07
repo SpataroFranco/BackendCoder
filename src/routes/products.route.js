@@ -6,6 +6,7 @@ import {
   postProductController,
   putProductController,
   deleteProductController,
+  updateProductController
 } from "../controllers/products.controller.js";
 import { adminAccess } from "../middleware/middleware.js";
 
@@ -28,5 +29,6 @@ router.put("/:pid",adminAccess, putProductController);
 
 //Elimina un producto por el pid pasado por params
 router.delete("/:pid",adminAccess, deleteProductController);
+
 
 export default router;

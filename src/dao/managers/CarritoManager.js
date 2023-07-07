@@ -106,6 +106,10 @@ class CarritoManager {
   
     await this.model.updateOne({ _id: cid }, { $set: cart });
   };
+
+  updateCart = async (cartId, cart) => {
+    await this.model.updateOne({_id:cartId}, cart)
+  }
 }
 
 export default CarritoManager;

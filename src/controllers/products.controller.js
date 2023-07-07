@@ -59,3 +59,13 @@ export const deleteProductController = async (req, res) => {
     console.log(error);
   }
 };
+
+export const updateProductController = async (req, res) => {
+  try {
+    const id = req.params.pid;
+    const cantidad = req.body;
+    await managerProduct.updateStock(id,cantidad);
+  } catch (error) {
+    console.log(error)
+  }
+};

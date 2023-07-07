@@ -10,6 +10,8 @@ import {
   purchaseController
 } from "../controllers/carts.controller.js";
 
+import { userAccess } from "../middleware/middleware.js";
+
 export default class cartsRouter extends Routers {
   init() {
     //Devuelve todos los carritos
@@ -25,7 +27,7 @@ export default class cartsRouter extends Routers {
     this.put("/:cid/products/:pid", putProductsToCartController);
 
     //Actualiza el carrito con un arreglo de productos
-    this.put("/:cid", putCartController);
+    this.put("/:cid",userAccess, putCartController);
 
     //Elimina del carrito el producto seleccionado
     this.delete("/:cid/products/:pid", deleteProductToCartController);
