@@ -84,8 +84,8 @@ export const purchaseController = async (req, res) => {
   try {
     const cartId = req.params.cid;
     const cart = await managerCart.getCartById(cartId);
-    // const userEmail = req.user.email
-    // console.log(userEmail);
+    const userEmail = req.user.email;
+    console.log(userEmail);
     let total = 0;
 
     if (cart) {
@@ -124,7 +124,7 @@ export const purchaseController = async (req, res) => {
         code: uuidv4(),
         purchase_datetime: new Date().toLocaleDateString(),
         amount: parseInt(total),
-        // purchaser: req.user.email,
+        purchaser: userEmail,
         products: ticketProducts,
       };
 
@@ -134,8 +134,8 @@ export const purchaseController = async (req, res) => {
       if (ticketCreated) {
         try {
           const contenido = await transporter.sendMail({
-            from: "spataroFranco1@gmail.com",
-            to: "spataroFranco1@gmail.com",
+            from: "Tienda nike",
+            to: "userEmail",
             subject: "Compra realizada",
             html: `<div>
             <h1>Compra realizada con exito!</h1> 

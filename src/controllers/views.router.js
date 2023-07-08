@@ -9,7 +9,8 @@ export const publicAcces = (req, res, next) => {
 };
 
 export const privateAcces = (req, res, next) => {
-  if (!req.session.user) return res.redirect("/");
+  if (!req.session.user)
+    return res.status(401).json({ message: "Unauthorized" });
   next();
 };
 
