@@ -11,6 +11,7 @@ import cartsRouter from "./routes/carts.route.js";
 import chatsRouter from "./routes/chats.route.js";
 import viewRouter from "./routes/views.router.js";
 import sessionRouter from "./routes/sessions.router.js";
+import mockingsRouter from "./routes/mocking.router.js";
 import initializePassport from "./config/passport.config.js";
 import { config } from "./config/config.js";
 // import productsRouter from "./routes/products.route.js";
@@ -60,12 +61,14 @@ const viewsRouter = new viewRouter();
 const sessionsRouter = new sessionRouter();
 const cartRouter = new cartsRouter();
 const chatRouter = new chatsRouter();
+const mockingRouter = new mockingsRouter(); 
 
 // app.use("/", productsRouter);
 app.use("/", viewsRouter.getRouter());
 app.use("/api/carts", cartRouter.getRouter());
 app.use("/api/chats", chatRouter.getRouter());
 app.use("/api/session", sessionsRouter.getRouter());
+app.use("/mockingproducts", mockingRouter.getRouter())
 
 //IO
 const io = new Server(server);

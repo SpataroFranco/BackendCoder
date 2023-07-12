@@ -1,34 +1,33 @@
-import { Router } from "express";
+import Routers from "./router.js";
 import {
   getProductsObjectController,
   getProductsController,
   getProductController,
   postProductController,
   putProductController,
-  deleteProductController,
-  updateProductController
+  deleteProductController
 } from "../controllers/products.controller.js";
+
 import { adminAccess } from "../middleware/middleware.js";
 
-const router = Router();
+export default class productsRouter extends Routers {
+  init() {
+    //Devuelve el objeto con la información pedida
+    this.get("/", getProductsObjectController);
 
-//Devuelve el objeto con la información pedida
-router.get("/", getProductsObjectController);
+    //Vista de los productos
+    this.get("/products", getProductsController);
 
-//Vista de los productos
-router.get("/products", getProductsController);
+    //Devuelve el producto con el pid especificado
+    this.get("/products/:pid", getProductController);
 
-//Devuelve el producto con el pid especificado
-router.get("/products/:pid", getProductController);
+    //Agrega un producto pasado por el body
+    this.post("/products", adminAccess, postProductController);
 
-//Agrega un producto pasado por el body
-router.post("/products", adminAccess, postProductController);
+    //Actualiza un producto pasado por el body
+    this.put("/:pid", adminAccess, putProductController);
 
-//Actualiza un producto pasado por el body
-router.put("/:pid",adminAccess, putProductController);
-
-//Elimina un producto por el pid pasado por params
-router.delete("/:pid",adminAccess, deleteProductController);
-
-
-export default router;
+    //Elimina un producto por el pid pasado por params
+    this.delete("/:pid", adminAccess, deleteProductController);
+  }
+}

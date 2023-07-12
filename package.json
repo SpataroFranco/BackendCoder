@@ -23,6 +23,7 @@
   "homepage": "https://github.com/SpataroFranco/BackendCoder#readme",
   "description": "",
   "dependencies": {
+    "@faker-js/faker": "^8.0.2",
     "bcrypt": "^5.1.0",
     "body": "^5.1.0",
     "body-parser": "^1.20.2",

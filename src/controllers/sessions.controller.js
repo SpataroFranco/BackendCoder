@@ -1,5 +1,4 @@
 import passport from "passport";
-// import userModel from "../dao/models/user.model.js";
 import { createHash } from "../utils.js";
 import { userService } from "../repository/index.js";
 
@@ -68,7 +67,6 @@ export const postRestartPasswordController = async (req, res) => {
       .status(400)
       .send({ status: "error", error: "Datos incorrectos" });
 
-  // const user = await userModel.findOne({ email });
   const user = await userService.getUser({email})
 
   if (!user)
@@ -78,10 +76,6 @@ export const postRestartPasswordController = async (req, res) => {
 
   const newHashedPassword = createHash(password);
 
-  // await userModel.updateOne(
-  //   { _id: user._id },
-  //   { $set: { password: newHashedPassword } }
-  // );
   await userService.updatePassword(user, newHashedPassword);
 
   res.send({ status: "success", message: "Contraseña actualizada" });

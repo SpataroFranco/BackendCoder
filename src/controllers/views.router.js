@@ -2,6 +2,10 @@ import productoModel from "../dao/models/products.model.js";
 import userModel from "../dao/models/user.model.js";
 import { userService } from "../repository/index.js";
 import { CreateUserDto } from "../dao/dto/user.dto.js";
+import { CustomError } from "../services/customError.service.js";
+import { Error } from "../enums/Error.js";
+import { generateUserErrorParam } from "../services/userErrorParam.js";
+import { generateUserErrorInfo } from "../services/userErrorInfo.js";
 
 export const publicAcces = (req, res, next) => {
   if (req.session.user) return res.redirect("/profile/products");
@@ -55,14 +59,22 @@ export const getViewsCurrentController = async (req, res) => {
     .populate("cart.cart")
     .lean();
 
-    let{ first_name,last_name,email,age,rol} = req.session.user
-    let user = new CreateUserDto({first_name,last_name,email,age,rol})
+  let { first_name, last_name, email, age, rol } = req.session.user;
+  if (!first_name || !last_name || !email) {
+    CustomError.createError({
+      name: "User login error",
+      cause: generateUserErrorInfo(req.session.user),
+      message: "Error cargando al usuario",
+      errorCode: Error.INVALID_JSON,
+    });
+  }
+  let user = new CreateUserDto({ first_name, last_name, email, age, rol });
 
   // const cartUser = await userService.getCart();
 
   res.render("current", {
     user,
-    cartUser
+    cartUser,
   });
 };
 
@@ -76,13 +88,11 @@ export const putUserController = async (req, res) => {
   try {
     const carritoNuevo = req.body;
 
-    // const user = await userModel.findOne({ email: uemail });
     const user = await userService.getUser({ email: uemail });
 
     if (user) {
       user.cart = carritoNuevo;
 
-      // await userModel.updateOne({ email: uemail }, { $set: user });
       await userService.updateUser(uemail, user);
 
       res.send({ code: 202, status: "Success", message: user.cart });
