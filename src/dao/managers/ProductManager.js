@@ -35,7 +35,7 @@ class ProductManager {
     });
   };
 
-  getProductsObject = async (limit, page, query, sort, res) => {
+  getProductsObject = async (limit, page, query, sort, res, req) => {
     const { docs, hasPrevPage, hasNextPage, nextPage, prevPage, totalDocs } =
       await this.model.paginate({}, { limit: limit, page, lean: true });
 
@@ -122,7 +122,7 @@ class ProductManager {
         );
       }
     } catch (error) {
-      console.error(err);
+      req.logger.error(error);
     }
   };
 
@@ -142,7 +142,7 @@ class ProductManager {
     });
   };
 
-  getProduct = async (pid, res) => {
+  getProduct = async (pid, res, req) => {
     try {
       const result = await productoModel.find({ _id: pid });
 
@@ -150,6 +150,7 @@ class ProductManager {
         return res.status(200).send({ status: "sucess", result });
       }
     } catch (error) {
+      req.logger.error(error);
       res.status(400).send({
         status: "error",
         error: "El producto con id: " + pid + " no existe",

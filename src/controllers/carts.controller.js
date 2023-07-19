@@ -12,16 +12,27 @@ const managerProduct = new ProductManager();
 const managerTicket = new TicketManager();
 
 export const getCartsController = async (req, res) => {
-  const result = await managerCart.getCarts();
-  res.send({ Carritos: result });
+  try {
+    const result = await managerCart.getCarts();
+    res.send({ Carritos: result });
+  } catch (error) {
+    req.logger.error(error);
+  }
 };
 
 export const postCartController = async (req, res) => {
-  const newCart = managerCart.addCart(req.body);
-  res.send({
-    status: "Success",
-    payload: newCart,
-  });
+  try {
+    const newCart = managerCart.addCart(req.body);
+    res.send({
+      status: "Success",
+      payload: newCart,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+      errorType: "error en el post del servidor",
+    });
+  }
 };
 
 export const getCartController = async (req, res) => {
@@ -43,14 +54,14 @@ export const putProductsToCartController = async (req, res) => {
   const cid = parseInt(req.params.cid);
   const productId = req.params.pid;
 
-  if (Number.isNaN(cid)) {
-    CustomError.createError({
-      name: "Product get by id error",
-      cause: generateCartErrorParam(cid),
-      message: "Error obteniendo el id del carrito",
-      errorCode: Error.INVALID_PARAM,
-    });
-  }
+  // if (Number.isNaN(cid)) {
+  //   CustomError.createError({
+  //     name: "Product get by id error",
+  //     cause: generateCartErrorParam(cid),
+  //     message: "Error obteniendo el id del carrito",
+  //     errorCode: Error.INVALID_PARAM,
+  //   });
+  // }
 
   const cart = managerCart.addProductToCart(cid, productId, cantidad);
 
@@ -61,14 +72,14 @@ export const putCartController = async (req, res) => {
   const cid = parseInt(req.params.cid);
   try {
     const newCart = req.body;
-    if (Number.isNaN(cid)) {
-      CustomError.createError({
-        name: "Product get by id error",
-        cause: generateCartErrorParam(cid),
-        message: "Error obteniendo el id del carrito",
-        errorCode: Error.INVALID_PARAM,
-      });
-    }
+    // if (Number.isNaN(cid)) {
+    //   CustomError.createError({
+    //     name: "Product get by id error",
+    //     cause: generateCartErrorParam(cid),
+    //     message: "Error obteniendo el id del carrito",
+    //     errorCode: Error.INVALID_PARAM,
+    //   });
+    // }
 
     await managerCart.addProductsToCart(cid, newCart, res);
   } catch (error) {
@@ -81,14 +92,14 @@ export const deleteProductToCartController = async (req, res) => {
   const pid = req.params.pid;
 
   try {
-    if (Number.isNaN(cid)) {
-      CustomError.createError({
-        name: "Product get by id error",
-        cause: generateCartErrorParam(cid),
-        message: "Error obteniendo el id del carrito",
-        errorCode: Error.INVALID_PARAM,
-      });
-    }
+    // if (Number.isNaN(cid)) {
+    //   CustomError.createError({
+    //     name: "Product get by id error",
+    //     cause: generateCartErrorParam(cid),
+    //     message: "Error obteniendo el id del carrito",
+    //     errorCode: Error.INVALID_PARAM,
+    //   });
+    // }
     await managerCart.deleteProductToCart(cid, pid, res);
   } catch (error) {
     console.log(error);
@@ -99,14 +110,14 @@ export const deleteProductsToCartController = async (req, res) => {
   const cid = parseInt(req.params.cid);
 
   try {
-    if (Number.isNaN(cid)) {
-      CustomError.createError({
-        name: "Product get by id error",
-        cause: generateCartErrorParam(cid),
-        message: "Error obteniendo el id del carrito",
-        errorCode: Error.INVALID_PARAM,
-      });
-    }
+    // if (Number.isNaN(cid)) {
+    //   CustomError.createError({
+    //     name: "Product get by id error",
+    //     cause: generateCartErrorParam(cid),
+    //     message: "Error obteniendo el id del carrito",
+    //     errorCode: Error.INVALID_PARAM,
+    //   });
+    // }
     await managerCart.deleteProductsToCart(cid);
   } catch (error) {
     console.log(error);
@@ -123,14 +134,14 @@ export const purchaseController = async (req, res) => {
     console.log(userEmail);
     let total = 0;
 
-    if (Number.isNaN(cartId)) {
-      CustomError.createError({
-        name: "Product get by id error",
-        cause: generateCartErrorParam(cartId),
-        message: "Error obteniendo el id del carrito",
-        errorCode: Error.INVALID_PARAM,
-      });
-    }
+    // if (Number.isNaN(cartId)) {
+    //   CustomError.createError({
+    //     name: "Product get by id error",
+    //     cause: generateCartErrorParam(cartId),
+    //     message: "Error obteniendo el id del carrito",
+    //     errorCode: Error.INVALID_PARAM,
+    //   });
+    // }
     if (cart) {
       if (!cart.products.length) {
         return res.send("Es necesario que agregue productos");
@@ -187,7 +198,7 @@ export const purchaseController = async (req, res) => {
           console.log(contenido);
           res.json({ status: "success", message: "Correo enviado con excito" });
         } catch (error) {
-          console.log(error);
+          req.logger.error(error);
           res.json({
             status: "error",
             message: "Hubo error al enviar el correo",
@@ -198,6 +209,7 @@ export const purchaseController = async (req, res) => {
       res.send("El carrito no existe");
     }
   } catch (error) {
+    req.logger.error(error);
     res.send(error.message);
   }
 };

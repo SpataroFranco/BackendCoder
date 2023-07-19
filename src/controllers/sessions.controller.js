@@ -3,17 +3,25 @@ import { createHash } from "../utils.js";
 import { userService } from "../repository/index.js";
 
 export const postRegisterUserController = async (req, res) => {
-  passport.authenticate("register", { failureRedirect: "/failregister" })(
-    req,
-    res,
-    async () => {
-      res.send({ status: "success", message: "User registered" });
-    }
-  );
+  try {
+    passport.authenticate("register", { failureRedirect: "/failregister" })(
+      req,
+      res,
+      async () => {
+        res.send({ status: "success", message: "User registered" });
+      }
+    );
+    req.logger.info("Usuario registrado");
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: "Error al procesar la solicitud",
+    });
+  }
 };
 
 export const getFailRegisterController = async (req, res) => {
-  console.log("Fallo en el registro");
+  req.logger.warn("Fallo al registrarse");
   res.send({ error: "Error en el registro" });
 };
 
@@ -26,7 +34,7 @@ export const postSessionController = async (req, res) => {
         return res
           .status(400)
           .send({ status: "error", error: "Invalid credentials" });
-
+  
       req.session.user = {
         first_name: req.user.first_name + " " + req.user.last_name,
         age: req.user.age,
@@ -35,6 +43,7 @@ export const postSessionController = async (req, res) => {
         cart: req.user.cart,
       };
 
+      req.logger.info("Usuario logueado")
       res.send({
         status: "success",
         payload: req.user,
@@ -45,7 +54,7 @@ export const postSessionController = async (req, res) => {
 };
 
 export const getFailLoginController = async (req, res) => {
-  console.log("Fallo en el ingreso");
+  req.logger.warn("Fallo en el ingreso");
   res.send({ error: "Error en el ingreso" });
 };
 
@@ -56,6 +65,7 @@ export const getLogoutController = async (req, res) => {
         .status(500)
         .send({ status: "error", error: "No pudo cerrar sesion" });
     res.redirect("/");
+    req.logger.info("Usuario desconectado");
   });
 };
 
@@ -67,7 +77,7 @@ export const postRestartPasswordController = async (req, res) => {
       .status(400)
       .send({ status: "error", error: "Datos incorrectos" });
 
-  const user = await userService.getUser({email})
+  const user = await userService.getUser({ email });
 
   if (!user)
     return res

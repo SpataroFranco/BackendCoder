@@ -1,0 +1,6 @@
+{"level":"info","message":"Usuario logueado"}
+{"level":"warn","message":"!Alerta!"}
+{"level":"info","message":"Info"}
+{"level":"error","message":"Error"}
+{"level":"fatal","message":"Fatal"}
+{"level":"info","message":"Usuario desconectado"}

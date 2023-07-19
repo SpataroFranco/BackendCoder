@@ -1,3 +1,4 @@
+import { addLogger } from "./middleware/logger.js";
 import express from "express";
 import handlebars from "express-handlebars";
 import passport from "passport";
@@ -28,7 +29,7 @@ await mongoose.connect(MONGO);
 const server = app.listen(PORT, () => {
   console.log("Servidor funcionando en el puerto: " + PORT);
 });
-
+app.use(addLogger)
 //Servicio
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -62,13 +63,14 @@ const sessionsRouter = new sessionRouter();
 const cartRouter = new cartsRouter();
 const chatRouter = new chatsRouter();
 const mockingRouter = new mockingsRouter(); 
-
+import loggerRoute from "./routes/logger.routes.js";
 // app.use("/", productsRouter);
 app.use("/", viewsRouter.getRouter());
 app.use("/api/carts", cartRouter.getRouter());
 app.use("/api/chats", chatRouter.getRouter());
 app.use("/api/session", sessionsRouter.getRouter());
 app.use("/mockingproducts", mockingRouter.getRouter())
+app.use("/loggertest", loggerRoute)
 
 //IO
 const io = new Server(server);

@@ -60,14 +60,14 @@ export const getViewsCurrentController = async (req, res) => {
     .lean();
 
   let { first_name, last_name, email, age, rol } = req.session.user;
-  if (!first_name || !last_name || !email) {
-    CustomError.createError({
-      name: "User login error",
-      cause: generateUserErrorInfo(req.session.user),
-      message: "Error cargando al usuario",
-      errorCode: Error.INVALID_JSON,
-    });
-  }
+  // if (!first_name || !last_name || !email) {
+  //   CustomError.createError({
+  //     name: "User login error",
+  //     cause: generateUserErrorInfo(req.session.user),
+  //     message: "Error cargando al usuario",
+  //     errorCode: Error.INVALID_JSON,
+  //   });
+  // }
   let user = new CreateUserDto({ first_name, last_name, email, age, rol });
 
   // const cartUser = await userService.getCart();
