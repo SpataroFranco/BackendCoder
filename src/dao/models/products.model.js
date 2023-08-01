@@ -15,7 +15,8 @@ const schema = new mongoose.Schema({
     price:{
         type:Number,
         require: true,
-        index: true
+        index: true,
+        min:1
     },
     status:{
         type:Boolean,
@@ -41,6 +42,10 @@ const schema = new mongoose.Schema({
         type: String,
         require: true,
         index: true
+    },
+    owner:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User"
     }
 })
 

@@ -20,7 +20,8 @@ export const config = {
     },
     gmail: {
         adminAccount: ADMIN_EMAIL,
-        adminPass: ADMIN_PASSWORD
+        adminPass: ADMIN_PASSWORD,
+        emailToken:process.env.SECRET_TOKEN_EMAIL
     },
     nodeEnv: NODE_ENV
 }; 

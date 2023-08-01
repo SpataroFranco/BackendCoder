@@ -15,6 +15,7 @@ import sessionRouter from "./routes/sessions.router.js";
 import mockingsRouter from "./routes/mocking.router.js";
 import initializePassport from "./config/passport.config.js";
 import { config } from "./config/config.js";
+import { connectDB } from "./config/dbConnection.js";
 // import productsRouter from "./routes/products.route.js";
 
 //Coneccion a la base de datos "ecommerce"
@@ -24,7 +25,7 @@ const PORT = config.server.port;
 
 const app = express();
 
-await mongoose.connect(MONGO);
+connectDB();
 
 const server = app.listen(PORT, () => {
   console.log("Servidor funcionando en el puerto: " + PORT);
