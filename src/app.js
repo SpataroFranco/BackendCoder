@@ -16,7 +16,9 @@ import mockingsRouter from "./routes/mocking.router.js";
 import initializePassport from "./config/passport.config.js";
 import { config } from "./config/config.js";
 import { connectDB } from "./config/dbConnection.js";
-// import productsRouter from "./routes/products.route.js";
+import productsRouter from "./routes/products.route.js";
+import { swaggerSpecs } from "./config/docConfig.js";
+import swaggerUi from "swagger-ui-express";
 
 //Coneccion a la base de datos "ecommerce"
 const MONGO = config.mongo.url;
@@ -64,14 +66,18 @@ const sessionsRouter = new sessionRouter();
 const cartRouter = new cartsRouter();
 const chatRouter = new chatsRouter();
 const mockingRouter = new mockingsRouter(); 
+const productRouter = new productsRouter();
 import loggerRoute from "./routes/logger.routes.js";
-// app.use("/", productsRouter);
+
+app.use("/api/products", productRouter.getRouter());
 app.use("/", viewsRouter.getRouter());
 app.use("/api/carts", cartRouter.getRouter());
 app.use("/api/chats", chatRouter.getRouter());
 app.use("/api/session", sessionsRouter.getRouter());
 app.use("/mockingproducts", mockingRouter.getRouter())
 app.use("/loggertest", loggerRoute)
+//Ruta de la documentacion
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 //IO
 const io = new Server(server);

@@ -9,6 +9,7 @@ import {
   deleteProductsToCartController,
   purchaseController
 } from "../controllers/carts.controller.js";
+import {checkRole} from "../middleware/auth.js";
 
 export default class cartsRouter extends Routers {
   init() {
