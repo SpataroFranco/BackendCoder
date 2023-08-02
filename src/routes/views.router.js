@@ -8,6 +8,8 @@ import {
   getViewsCurrentController,
   getViewsResetPasswordController,
   putUserController,
+  forgotPassword,
+  resetPassword
 } from "../controllers/views.router.js";
 
 export default class viewsRouter extends Routers {
@@ -24,5 +26,9 @@ export default class viewsRouter extends Routers {
 
     //Actualiza el usuario con un arreglo de carritos
     this.put("/:uemail", publicAcces, putUserController);
+
+    this.post("/forgot-password", forgotPassword);
+
+    this.post("/reset-password", resetPassword);
   }
 }

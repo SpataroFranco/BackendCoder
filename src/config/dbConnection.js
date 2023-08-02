@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-import {options} from "./options.js";
+import {config} from "./config.js";
 
 export const connectDB = async()=>{
   try {
-    await mongoose.connect(options.mongo.url);
+    await mongoose.connect(config.mongo.url);
     console.log("conexión a la base de datos de manera exitosa");
   } catch (error) {
       console.log(`Hubo un error conectandose a la base ${error}`);

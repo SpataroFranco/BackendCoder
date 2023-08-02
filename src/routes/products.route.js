@@ -8,7 +8,7 @@ import {
   deleteProductController
 } from "../controllers/products.controller.js";
 
-import { adminAccess } from "../middleware/middleware.js";
+import {checkRole} from "../middleware/auth.js";
 
 export default class productsRouter extends Routers {
   init() {
@@ -22,12 +22,12 @@ export default class productsRouter extends Routers {
     this.get("/products/:pid", getProductController);
 
     //Agrega un producto pasado por el body
-    this.post("/products", adminAccess, postProductController);
+    this.post("/products", checkRole(["admin","premium"]), postProductController);
 
     //Actualiza un producto pasado por el body
-    this.put("/:pid", adminAccess, putProductController);
+    this.put("/:pid", checkRole(["admin"]), putProductController);
 
     //Elimina un producto por el pid pasado por params
-    this.delete("/:pid", adminAccess, deleteProductController);
+    this.delete("/:pid", checkRole(["admin","premium"]), deleteProductController);
   }
 }

@@ -8,9 +8,7 @@ import {
   getLogoutController,
   postRestartPasswordController,
   getGithubCallbackController,
-  getGithubController,
-  forgotPassword,
-  resetPassword
+  getGithubController
 } from "../controllers/sessions.controller.js";
 
 export default class viewsRouter extends Routers {
@@ -32,8 +30,5 @@ export default class viewsRouter extends Routers {
     
     this.get("/githubcallback", getGithubCallbackController);
 
-    this.post("/forgot-password", forgotPassword);
-
-    this.post("/reset-password", resetPassword)
   }
 }

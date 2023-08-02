@@ -27,7 +27,8 @@ const schema = new mongoose.Schema({
   },
   rol: {
     type: String,
-    require: true,
+    required: true,
+    enum: ["user", "admin", "premium"],
     default: "user",
   },
   cart: {
@@ -37,7 +38,7 @@ const schema = new mongoose.Schema({
           type: mongoose.Schema.Types.ObjectId,
           ref: "carts",
         },
-      }
+      },
     ],
     default: [],
   },
