@@ -19,10 +19,10 @@ export default class productsRouter extends Routers {
     this.get("/products", getProductsController);
 
     //Devuelve el producto con el pid especificado
-    this.get("/products/:pid", getProductController);
+    this.get("/:pid", getProductController);
 
     //Agrega un producto pasado por el body
-    this.post("/products", checkRole(["admin","premium"]), postProductController);
+    this.post("/", checkRole(["admin","premium"]), postProductController);
 
     //Actualiza un producto pasado por el body
     this.put("/:pid", checkRole(["admin"]), putProductController);

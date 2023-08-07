@@ -3,7 +3,7 @@ paths:
     get:
       summary: Obtengo todos los productos
       tags:
-        - Productos
+        - Products
       responses:
         "200":
           description: Los productos se obtuvieron de forma correcta.
@@ -15,12 +15,151 @@ paths:
                   $ref: "#components/schemas/Products"
         "500":
           description: Error interno del servidor.
-
+    post:
+      summary: Crea un producto nuevo en la bd
+      tags:
+        - Products
+      parameters:
+        - name: title
+          in: path
+          required: true
+          description: Nombre del producto
+          schema:
+            type: string
+        - name: category
+          in: path
+          require: true
+          description: Categoria del producto
+          schema:
+            type: string
+        - name: description
+          in: path
+          required: true
+          description: Descripcion del producto
+          schema:
+            type: string
+        - name: price
+          in: path
+          required: true
+          description: Precio del producto
+          schema:
+            type: number
+        - name: status
+          in: path
+          required: true
+          description: estado del producto
+          schema:
+            type: boolean
+        - name: thumbnail
+          in: path
+          required: true
+          description: thumbnail del producto
+          schema:
+            type: Array
+        - name: code
+          in: path
+          required: true
+          description: codigo del producto
+          schema:
+            type: string
+        - name: stock
+          in: path
+          required: true
+          description: stock del producto
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/PostProducts"
+      responses:
+        "200":
+          description: Producto creado correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Products"
+        "500":
+          description: Error interno del servidor
+  /api/products/{pid}/:
+    get:
+      summary: Obtener productos por ID
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: pid es el id del producto
+          schema:
+            $type: number
+      responses:
+        "200":
+          description: El productos se obtuvo de forma correcta
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Products"
+        "500":
+          description: Error interno del servidor
+    delete:
+      summary: borrar productos por ID
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: pid es el id del producto a borrar
+          schema:
+            $type: number
+      responses:
+        "200":
+          description: El producto se elimino de forma correcta
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Products"
+        "500":
+          description: Error interno del servidor
+    put:
+      summary: actualiza un producto por ID
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Description
+          schema:
+            $type: number
+      responses:
+        "200":
+          description: El producto se elimino de forma correcta
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Products"
+        "500":
+          description: Error interno del servidor
 components:
   schemas:
     Products:
       type: object
       properties:
+        _id:
+          type: ObjectId
+          description: id del usuario autogenerado por la base de datos
         title:
           type: string
           description: Titulo
@@ -48,3 +187,49 @@ components:
         owner:
           type: ObjectId
           description: Creador del producto
+      example:
+        _id: ObjectId("64601e8a8d390d0287ddd5a5")
+        title: "Zapatillas nike"
+        category: "zapatilla"
+        description: "Zapatillas deportivas"
+        price: 60000
+        code: "A224"
+        thumbnail: ["https://i.ibb.co/bXZB23R/vaporMax.webp"]
+        stock: 5
+        status: true
+  requestBodies:
+    PostProducts:
+      type: object
+      properties:
+        title:
+          type: string
+          description: nombre del producto
+        description:
+          type: string
+          description: descripcion del producto
+        category:
+          type: string
+          description: categoria del producto
+        price:
+          type: number
+          description: precio del producto
+        status:
+          type: boolean
+          description: estado del producto
+        code:
+          type: string
+          description: codigo unico del producto
+        thumbnail:
+          type: Array
+          description: imagenes del producto
+        stock:
+          type: Number
+      example:
+        title: "Zapatillas nike"
+        description: "Zapatillas deportivas"
+        price: 60000
+        code: "A224"
+        thumbnail: ["https://i.ibb.co/bXZB23R/vaporMax.webp"]
+        category: "zapatilla"
+        stock: 5
+        status: true

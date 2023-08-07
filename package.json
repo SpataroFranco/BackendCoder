@@ -50,5 +50,8 @@
     "sweetalert2": "^11.7.3",
     "uuidv4": "^6.2.13",
     "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "mocha": "^10.2.0"
   }
 }
