@@ -11,3 +11,10 @@
 {"kind":"ObjectId","message":"Cast to ObjectId failed for value \"45454545\" (type string) at path \"_id\" for model \"products\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"45454545\"","value":"45454545","valueType":"string"}
 {"kind":"ObjectId","message":"Cast to ObjectId failed for value \"45454545\" (type string) at path \"_id\" for model \"products\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"45454545\"","value":"45454545","valueType":"string"}
 {"kind":"ObjectId","message":"Cast to ObjectId failed for value \"45454545\" (type string) at path \"_id\" for model \"products\"","name":"CastError","path":"_id","reason":{},"stringValue":"\"45454545\"","value":"45454545","valueType":"string"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}
+{"level":"error"}

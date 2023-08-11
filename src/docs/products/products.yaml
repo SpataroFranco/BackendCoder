@@ -1,35 +1,29 @@
 paths:
   /api/products/:
     get:
-      summary: Obtengo todos los productos
+      summary: Obtener todas los productos
       tags:
-        - Products
+        - products
       responses:
         "200":
-          description: Los productos se obtuvieron de forma correcta.
+          description: Los productos se obtuvieron de forma correcta
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#components/schemas/Products"
+                  $ref: "#components/schemas/products"
         "500":
-          description: Error interno del servidor.
+          description: Error interno del servidor
     post:
-      summary: Crea un producto nuevo en la bd
+      summary: Crear un producto nuevo en la bd
       tags:
-        - Products
+        - products
       parameters:
-        - name: title
+        - name: name
           in: path
           required: true
           description: Nombre del producto
-          schema:
-            type: string
-        - name: category
-          in: path
-          require: true
-          description: Categoria del producto
           schema:
             type: string
         - name: description
@@ -44,6 +38,24 @@ paths:
           description: Precio del producto
           schema:
             type: number
+        - name: code
+          in: path
+          required: true
+          description: codigo del producto
+          schema:
+            type: string
+        - name: category
+          in: path
+          required: true
+          description: categoria del producto
+          schema:
+            type: string
+        - name: stock
+          in: path
+          required: true
+          description: stock del producto
+          schema:
+            type: number
         - name: status
           in: path
           required: true
@@ -55,19 +67,7 @@ paths:
           required: true
           description: thumbnail del producto
           schema:
-            type: Array
-        - name: code
-          in: path
-          required: true
-          description: codigo del producto
-          schema:
             type: string
-        - name: stock
-          in: path
-          required: true
-          description: stock del producto
-          schema:
-            type: number
       requestBody:
         required: true
         content:
@@ -82,14 +82,14 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#components/schemas/Products"
+                  $ref: "#components/schemas/products"
         "500":
           description: Error interno del servidor
   /api/products/{pid}/:
     get:
       summary: Obtener productos por ID
       tags:
-        - Products
+        - products
       parameters:
         - name: pid
           in: path
@@ -105,13 +105,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#components/schemas/Products"
+                  $ref: "#components/schemas/products"
         "500":
           description: Error interno del servidor
     delete:
       summary: borrar productos por ID
       tags:
-        - Products
+        - products
       parameters:
         - name: pid
           in: path
@@ -127,13 +127,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#components/schemas/Products"
+                  $ref: "#components/schemas/products"
         "500":
           description: Error interno del servidor
     put:
       summary: actualiza un producto por ID
       tags:
-        - Products
+        - products
       parameters:
         - name: pid
           in: path
@@ -149,12 +149,12 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#components/schemas/Products"
+                  $ref: "#components/schemas/products"
         "500":
           description: Error interno del servidor
 components:
   schemas:
-    Products:
+    products:
       type: object
       properties:
         _id:
@@ -190,13 +190,13 @@ components:
       example:
         _id: ObjectId("64601e8a8d390d0287ddd5a5")
         title: "Zapatillas nike"
-        category: "zapatilla"
         description: "Zapatillas deportivas"
         price: 60000
-        code: "A224"
-        thumbnail: ["https://i.ibb.co/bXZB23R/vaporMax.webp"]
-        stock: 5
         status: true
+        thumbnail: ["https://i.ibb.co/bXZB23R/vaporMax.webp"]
+        code: "A224"
+        stock: 5
+        category: "zapatilla"
   requestBodies:
     PostProducts:
       type: object

@@ -23,7 +23,7 @@ export default class cartsRouter extends Routers {
     this.get("/:cid", getCartController);
 
     //Actualiza la cantidad de unidades del producto en el carrito por la cantidad pasada por req.body
-    this.put("/:cid/products/:pid", putProductsToCartController);
+     
 
     //Actualiza el carrito con un arreglo de productos
     this.put("/:cid",checkRole(["user"]), putCartController);

@@ -12,7 +12,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#components/schemas/Carts"
+                  $ref: "#components/schemas/Cart"
         "500":
           description: Error interno del servidor.
   /api/carts/{cid}:
@@ -33,7 +33,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#components/schemas/Carts'
+                $ref: "#components/schemas/Cart"
         "500":
           description: Error interno del servidor
     put:
@@ -55,7 +55,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#components/schemas/Carts"
+                  $ref: "#components/schemas/Cart"
         "500":
           description: Error interno del servidor
     delete:
@@ -77,7 +77,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#components/schemas/Carts"
+                  $ref: "#components/schemas/Cart"
         "500":
           description: Error interno del servidor      
   /api/carts/{cid}/products/{pid}:
@@ -106,7 +106,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#components/schemas/Carts"
+                  $ref: "#components/schemas/Cart"
         "500":
           description: Error interno del servidor
     put:
