@@ -25,7 +25,6 @@ const schema = new mongoose.Schema({
     },
     thumbnail:{
         type:Array,
-        require: true,
         default: []
     },
     code:{
