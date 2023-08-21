@@ -19,6 +19,7 @@ import { connectDB } from "./config/dbConnection.js";
 import productsRouter from "./routes/products.route.js";
 import { swaggerSpecs } from "./config/docConfig.js";
 import swaggerUi from "swagger-ui-express";
+import loggerRoute from "./routes/logger.routes.js";
 
 //Coneccion a la base de datos "ecommerce"
 const MONGO = config.mongo.url;
@@ -67,7 +68,6 @@ const cartRouter = new cartsRouter();
 const chatRouter = new chatsRouter();
 const mockingRouter = new mockingsRouter(); 
 const productRouter = new productsRouter();
-import loggerRoute from "./routes/logger.routes.js";
 
 app.use("/api/products", productRouter.getRouter());
 app.use("/", viewsRouter.getRouter());

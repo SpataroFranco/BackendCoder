@@ -5,6 +5,15 @@ class ProductManager {
     this.model = productoModel;
   }
 
+  devolverProductos = async (req, res) => {
+    try {
+      const result = await productoModel.find();
+      res.send({ Productos: result });
+    } catch (error) {
+      res.send("error")
+    }
+  }
+
   //Funcion que identifica el tipo de respuesta para devolver el objeto segun el criterio pasado por query
   devolverObjeto = (
     res,

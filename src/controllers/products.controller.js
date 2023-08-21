@@ -8,11 +8,16 @@ import { CustomError } from "../services/customError.service.js";
 const managerProduct = new ProductManager();
 
 export const getProductsObjectController = async (req, res) => {
-  const { limit = 10, page = 1, query, sort } = req.query;
+  // const { limit = 10, page = 1, query, sort } = req.query;
+  // try {
+  //   await managerProduct.getProductsObject(limit, page, query, sort, res, req);
+  // } catch (error) {
+  //   console.error(err);
+  // }
   try {
-    await managerProduct.getProductsObject(limit, page, query, sort, res, req);
+    return await managerProduct.devolverProductos(req, res);
   } catch (error) {
-    console.error(err);
+    console.log(error);
   }
 };
 
