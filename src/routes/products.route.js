@@ -22,7 +22,7 @@ export default class productsRouter extends Routers {
     this.get("/:pid", getProductController);
 
     //Agrega un producto pasado por el body
-    this.post("/", checkRole(["admin","premium"]), postProductController);
+    this.post("/", postProductController);
 
     //Actualiza un producto pasado por el body
     this.put("/:pid", checkRole(["admin"]), putProductController);

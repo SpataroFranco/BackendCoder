@@ -48,9 +48,10 @@ export const postProductController = async (req, res) => {
     status,
     thumbnail,
     code,
-    stock
+    stock,
+    req.session.user
   );
-  res.send({ result });
+  res.status(200).json({ status: "succes", payload: result });
 };
 
 export const putProductController = async (req, res) => {

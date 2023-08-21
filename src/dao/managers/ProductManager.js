@@ -171,7 +171,9 @@ class ProductManager {
     status,
     thumbnail,
     code,
-    stock
+    stock,
+    category,
+    owner
   ) => {
     const producto = {
       title,
@@ -181,6 +183,8 @@ class ProductManager {
       thumbnail,
       code,
       stock,
+      category,
+      owner
     };
 
     return await this.model.create(producto);
