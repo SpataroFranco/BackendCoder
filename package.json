@@ -6,9 +6,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./src/app.js",
     "dev": "nodemon ./src/app.js",
-    "test1": "mocha test/products.test.js --timeout 10000",
-    "test2": "mocha test/session.test.js --timeout 10000",
-    "test3": "mocha test/cart.test.js --timeout 10000",
     "testApp":"mocha test/testApp.test.js --timeout 10000"
   },
   "keywords": [],
