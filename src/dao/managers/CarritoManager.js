@@ -53,6 +53,7 @@ class CarritoManager {
       }
 
       await this.model.updateOne({ _id: idCart }, { $set: cart });
+      
     } catch (error) {
       console.log(error);
     }
@@ -105,6 +106,8 @@ class CarritoManager {
     cart.products.splice(0, cart.products.length);
   
     await this.model.updateOne({ _id: cid }, { $set: cart });
+
+    return cart;
   };
 
   updateCart = async (cartId, cart) => {

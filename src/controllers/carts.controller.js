@@ -14,7 +14,8 @@ const managerTicket = new TicketManager();
 export const getCartsController = async (req, res) => {
   try {
     const result = await managerCart.getCarts();
-    res.send({ Carritos: result });
+    res.send({ payload: result, status: "success" });
+    // res.status(200).json({ status: "success", payload: result });
   } catch (error) {
     req.logger.error(error);
   }
@@ -118,7 +119,9 @@ export const deleteProductsToCartController = async (req, res) => {
     //     errorCode: Error.INVALID_PARAM,
     //   });
     // }
-    await managerCart.deleteProductsToCart(cid);
+    const result = await managerCart.deleteProductsToCart(cid);
+
+    res.send({ status: "success", payload: result });
   } catch (error) {
     console.log(error);
   }

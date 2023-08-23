@@ -13,6 +13,7 @@ export const postRegisterUserController = async (req, res) => {
         res.send({ status: "success", message: "User registered" });
       }
     );
+    res.send({ status: "success", message: "User registered" });
     req.logger.info("Usuario registrado");
   } catch (error) {
     res.status(500).json({

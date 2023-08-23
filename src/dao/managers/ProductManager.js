@@ -173,30 +173,8 @@ class ProductManager {
     return result;
   };
 
-  postProduct = async (
-    title,
-    description,
-    price,
-    status,
-    thumbnail,
-    code,
-    stock,
-    category,
-    owner
-  ) => {
-    const producto = {
-      title,
-      description,
-      price,
-      status,
-      thumbnail,
-      code,
-      stock,
-      category,
-      owner
-    };
-
-    return await this.model.create(producto);
+  postProduct = async (product) => {
+    return await this.model.create(product);
   };
 
   putProduct = async (pid, producto, res) => {
@@ -211,16 +189,12 @@ class ProductManager {
     }
   };
 
-  deleteProduct = async (pid, res) => {
+  deleteProduct = async (pid) => {
     try {
       await productoModel.deleteOne({ _id: pid });
 
-      res.send({
-        status: "Success",
-        message: "Producto borrado",
-      });
     } catch (error) {
-      return res.send({ error: "Producto no encontrado" });
+      console.log(error)
     }
   };
 

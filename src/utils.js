@@ -19,17 +19,17 @@ export const customFaker = new Faker({
 
 const {commerce,image,database,datatype,lorem,string} = customFaker;
 
-const generateProduct = () => {
+export const generateProduct = () => {
     return{
         _id: database.mongodbObjectId(),
         title: commerce.productName(),
         description: lorem.lines(1),
         price: parseFloat(commerce.price()),
-        status:datatype.boolean,
-        thumbnail:image.url(),
-        code:string.alphanumeric(6),
-        stock:parseInt(string.numeric(2)),
-        category:commerce.department(),
+        status: datatype.boolean,
+        thumbnail: image.url(),
+        code: string.alphanumeric(6),
+        stock: parseInt(string.numeric(2)),
+        category: commerce.department(),
     }
 }
 

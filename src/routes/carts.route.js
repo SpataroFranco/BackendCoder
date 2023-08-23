@@ -20,10 +20,7 @@ export default class cartsRouter extends Routers {
     this.post("/", postCartController);
 
     //Vista para ver cart específico
-    this.get("/:cid", getCartController);
-
-    //Actualiza la cantidad de unidades del producto en el carrito por la cantidad pasada por req.body
-     
+    this.get("/:cid", getCartController);     
 
     //Actualiza el carrito con un arreglo de productos
     this.put("/:cid",checkRole(["user"]), putCartController);

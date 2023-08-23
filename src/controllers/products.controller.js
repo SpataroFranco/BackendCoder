@@ -1,4 +1,5 @@
 import ProductManager from "../dao/managers/ProductManager.js";
+import ProductDTO from "../dao/dto/product.dto.js";
 import { generateMocking } from "../utils.js";
 import { Error } from "../enums/Error.js";
 import { generateProductErrorInfo } from "../services/productErrorInfo.js";
@@ -34,7 +35,7 @@ export const getProductController = async (req, res) => {
 };
 
 export const postProductController = async (req, res) => {
-  const { title, description, price, status, thumbnail, code, stock } =
+  const { title, description, price, status, thumbnail, code, stock, category } =
     req.body;
 
     // if (!title || !description || !price || !status || !thumbnail || !code || !stock) {
@@ -46,17 +47,13 @@ export const postProductController = async (req, res) => {
     //   });
     // }
 
-  const result = await managerProduct.postProduct(
-    title,
-    description,
-    price,
-    status,
-    thumbnail,
-    code,
-    stock,
-    req.session.user
-  );
-  res.status(200).json({ status: "succes", payload: result });
+  if(!title||!description||!price || !code || !stock || !category) return res.status(400).send({status:"error",error:"Incomplete values"})
+
+  const product = ProductDTO.getProductInputFrom({title,description,price,status,code,stock,category})
+
+  const result = await managerProduct.postProduct(product);
+
+  res.status(200).json({ status: "success", payload: result });
 };
 
 export const putProductController = async (req, res) => {
@@ -89,9 +86,13 @@ export const deleteProductController = async (req, res) => {
   //   })
   // }
   try {
-    await managerProduct.deleteProduct(id, res);
+    await managerProduct.deleteProduct(id);
+    res.send({
+      status: "Success",
+      message: "Producto borrado",
+    });
   } catch (error) {
-    console.log(error);
+    res.send({ error: "Producto no encontrado" });
   }
 };
 
