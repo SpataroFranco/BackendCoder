@@ -1,8 +1,12 @@
 import passport from "passport";
-import { createHash, isValidPassword, generateEmailToken, verifyEmailToken } from "../utils.js";
+import {
+  createHash,
+  isValidPassword,
+  generateEmailToken,
+  verifyEmailToken,
+} from "../utils.js";
 import { userService } from "../repository/index.js";
-
-
+import userModel from "../dao/models/user.model.js";
 
 export const postRegisterUserController = async (req, res) => {
   try {
@@ -13,6 +17,10 @@ export const postRegisterUserController = async (req, res) => {
         res.send({ status: "success", message: "User registered" });
       }
     );
+    const user = await userModel.findOne({ email: req.user.email });
+    user.last_connection = new Date();
+
+    await userModel.updateOne({ _id: user._id }, user);
     res.send({ status: "success", message: "User registered" });
     req.logger.info("Usuario registrado");
   } catch (error) {
@@ -37,7 +45,7 @@ export const postSessionController = async (req, res) => {
         return res
           .status(400)
           .send({ status: "error", error: "Invalid credentials" });
-  
+
       req.session.user = {
         first_name: req.user.first_name + " " + req.user.last_name,
         age: req.user.age,
@@ -46,7 +54,12 @@ export const postSessionController = async (req, res) => {
         cart: req.user.cart,
       };
 
-      req.logger.info("Usuario logueado")
+      const user = await userModel.findOne({ email: req.user.email });
+      user.last_connection = new Date();
+
+      await userModel.updateOne({ _id: user._id }, user);
+
+      req.logger.info("Usuario logueado");
       res.send({
         status: "success",
         payload: req.user,

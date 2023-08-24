@@ -5,7 +5,6 @@ import passport from "passport";
 import { Server } from "socket.io";
 import __dirname from "./utils.js";
 import chatModel from "./dao/models/messages.model.js";
-import mongoose from "mongoose";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import cartsRouter from "./routes/carts.route.js";
@@ -20,6 +19,7 @@ import productsRouter from "./routes/products.route.js";
 import { swaggerSpecs } from "./config/docConfig.js";
 import swaggerUi from "swagger-ui-express";
 import loggerRoute from "./routes/logger.routes.js";
+import usersRouter from "./routes/users.routes.js";
 
 //Coneccion a la base de datos "ecommerce"
 const MONGO = config.mongo.url;
@@ -68,12 +68,14 @@ const cartRouter = new cartsRouter();
 const chatRouter = new chatsRouter();
 const mockingRouter = new mockingsRouter(); 
 const productRouter = new productsRouter();
+const userRouter = new usersRouter();
 
 app.use("/api/products", productRouter.getRouter());
 app.use("/", viewsRouter.getRouter());
 app.use("/api/carts", cartRouter.getRouter());
 app.use("/api/chats", chatRouter.getRouter());
 app.use("/api/session", sessionsRouter.getRouter());
+app.use("/api/users", userRouter.getRouter());
 app.use("/mockingproducts", mockingRouter.getRouter())
 app.use("/loggertest", loggerRoute)
 //Ruta de la documentacion

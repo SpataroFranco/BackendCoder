@@ -13,7 +13,7 @@ const initializePassport = () => {
     new LocalStrategy(
       { passReqToCallback: true, usernameField: "email" },
       async (req, username, password, done) => {
-        const { first_name, last_name, email, age, rol, cart } = req.body;
+        const { first_name, last_name, email, age, rol, cart, avatar } = req.body;
         try {
           
           const user = await userService.getUser({ email: username });
@@ -29,7 +29,8 @@ const initializePassport = () => {
             age,
             password: createHash(password),
             rol,
-            cart
+            cart,
+            avatar
           };
           if(newUser.rol == ""){
             newUser.rol = "user";

@@ -10,11 +10,12 @@ import {
   getGithubCallbackController,
   getGithubController
 } from "../controllers/sessions.controller.js";
+import { uploaderProfile } from "../utils.js";
 
 export default class viewsRouter extends Routers {
 
   init() {
-    this.post("/register", postRegisterUserController);
+    this.post("/register",uploaderProfile.single("avatar") ,postRegisterUserController);
 
     this.get("/failregister", getFailRegisterController);
     

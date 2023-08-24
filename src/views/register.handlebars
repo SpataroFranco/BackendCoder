@@ -1,7 +1,7 @@
 <div class="containerRegister">
   <h1>Registro</h1>
   <div class="form">
-    <form id="registerForm">
+    <form enctype="multipart/form-data"id="registerForm">
 
       <input name="first_name" placeholder="Nombre" />
 
@@ -14,6 +14,8 @@
       <input type="password" name="password" placeholder="Contraseña" />
 
       <input name="rol" placeholder="Rol" />
+
+      <input type="file" placeholder="Imagen de perfil" name="avatar">
 
       <input type="submit" class="btn" />
 

@@ -1,37 +1,25 @@
-import { Router } from "express";
-import userModel from "../dao/models/user.model.js";
-import { checkRole } from "../middleware/auth.js";
+import Routers from "./router.js";
+import { checkRole, checkAuthenticated } from "../middleware/auth.js";
+import {
+  changeRolUser,
+  updateUserDocument,
+} from "../controllers/users.controller.js";
+import { uploaderDocument } from "../utils.js";
 
-const router = Router();
+export default class usersRouter extends Routers {
+  init() {
+    //Devuelve el objeto con la información pedida
+    this.put("/premium/:uid", checkRole(["admin"]), changeRolUser);
 
-router("/premium/:uid", checkRole(["admin"]), async (req, res) => {
-  try {
-    const userId = req.params.uid;
-
-    const user = await userModel.findById(userId);
-
-    const userRol = user.rol;
-
-    if (userRol === "user") {
-      user.rol = "premium";
-    } else if (userRol === "premium") {
-      user.rol = "user";
-    } else {
-      return res.json({
-        status: "error",
-        message: "No es posible cambiar el rol del usuario.",
-      });
-    }
-
-    await userModel.updateOne({ _id: user._id }, user);
-
-    return res.json({ status: "success", message: "Rol modificado." });
-  } catch (error) {
-    return res.json({
-      status: "error",
-      message: "Error al intentar cambiar el rol.",
-    });
+    this.put(
+      "/:uid/documents",
+      checkAuthenticated,
+      uploaderDocument.fields([
+        { name: "identificacion", maxCount: 1 },
+        { name: "domicilio", maxCount: 1 },
+        { name: "estadoDeCuenta", maxCount: 1 },
+      ]),
+      updateUserDocument
+    );
   }
-});
-
-export { router as usersRouter };
+}

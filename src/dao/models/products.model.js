@@ -24,8 +24,8 @@ const schema = new mongoose.Schema({
         index: true
     },
     thumbnail:{
-        type:Array,
-        default: []
+        type:String,
+        default: ""
     },
     code:{
         type:String,
