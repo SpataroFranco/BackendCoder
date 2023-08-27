@@ -14,7 +14,7 @@ export const postRegisterUserController = async (req, res) => {
       req,
       res,
       async () => {
-        res.send({ status: "success", message: "User registered" });
+        // res.send({ status: "success", message: "User registered" });
       }
     );
     const user = await userModel.findOne({ email: req.user.email });
