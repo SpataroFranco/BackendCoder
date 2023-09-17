@@ -6,6 +6,8 @@ import transporter from "../config/gmail.js";
 import { Error } from "../enums/Error.js";
 import { generateCartErrorParam } from "../services/cartErrorParam.js";
 import { CustomError } from "../services/customError.service.js";
+import productoModel from "../dao/models/products.model.js";
+import userModel from "../dao/models/user.model.js";
 
 const managerCart = new CarritoManager();
 const managerProduct = new ProductManager();
@@ -71,6 +73,8 @@ export const putProductsToCartController = async (req, res) => {
 
 export const putCartController = async (req, res) => {
   const cid = parseInt(req.params.cid);
+
+  const userDB = await userModel.findOne({ email: req.session.user.email });
   try {
     const newCart = req.body;
     // if (Number.isNaN(cid)) {
@@ -81,6 +85,7 @@ export const putCartController = async (req, res) => {
     //     errorCode: Error.INVALID_PARAM,
     //   });
     // }
+
 
     await managerCart.addProductsToCart(cid, newCart, res);
   } catch (error) {
@@ -129,12 +134,55 @@ export const deleteProductsToCartController = async (req, res) => {
   res.send({ code: 202, status: "Success", message: cart.products });
 };
 
+
+export const addProductInCart = async (req, res) => {
+  const cartId = req.session?.user?.cart;
+  const productId = req.params.pid;
+  const product = await productoModel.findById(productId);
+  const productOwer = product.owner?.toString();
+  const reqUserId = req.user._id.toString();
+
+  if (productOwer === reqUserId) {
+    return res
+      .status(404)
+      .send({ error: "No puedes agregar este producto al carrito" });
+  }
+  try {
+    const response = await managerCart.addProductInCartDB(cartId, productId);
+    if (!response)
+      return res
+        .status(404)
+        .send({ error: "No se pudo agregar, producto inexistente" });
+
+    res.send({ status: "success", payload: response });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: error.message, message: "Error en el servidor" });
+  }
+};
+
+export const finishCart = async (req, res) => {
+  const cart = await managerCart.getCartById(req.params.cid);
+
+  //HACER FUNCION PARA CALCULAR TOTAL DE LA COMPRA
+
+  if (cart.products.length > 0) {
+    return res.render("cart", { cart });
+  } else {
+    return res.send({
+      code: 404,
+      status: "Error",
+      message: "El carrito: " + cart._id + " se encuentra vacío",
+    });
+  }
+};
+
 export const purchaseController = async (req, res) => {
   try {
-    const cartId = parseInt(req.params.cid);
+    const cartId = req.params.cid;
     const cart = await managerCart.getCartById(cartId);
     const userEmail = req.user.email;
-    console.log(userEmail);
     let total = 0;
 
     // if (Number.isNaN(cartId)) {
@@ -167,10 +215,14 @@ export const purchaseController = async (req, res) => {
           total +=
             parseInt(cartProduct.quantity) * parseInt(productDB[0].price);
 
+          let newStock =
+            parseInt(productDB[0].stock) - parseInt(cartProduct.quantity);
+
           //Restar del stock del producto la quantity solicitada
-          await managerProduct.updateStock(
-            cartProduct._id,
-            parseInt(cartProduct.product.stock) - parseInt(cartProduct.quantity)
+          await productoModel.findOneAndUpdate(
+            { _id: cartProduct._id },
+            { $set: { stock: newStock } },
+            { new: true }
           );
         } else {
           rejectedProducts.push(cartProduct._id);
@@ -186,26 +238,25 @@ export const purchaseController = async (req, res) => {
       };
 
       const ticketCreated = await managerTicket.createTicket(newTicket);
-      await managerCart.updateCart(cartId, cart);
-      console.log(ticketCreated);
+
       if (ticketCreated) {
         try {
-          const contenido = await transporter.sendMail({
-            from: "Tienda nike",
-            to: "userEmail",
+          await transporter.sendMail({
+            from: "CodersHouse",
+            to: userEmail,
             subject: "Compra realizada",
-            html: `<div>
+            html: `
             <h1>Compra realizada con exito!</h1> 
-            <strong>Monto total</strong>: ${total}</div>`,
+            <strong>Monto total</strong>: ${total}`,
           });
-          console.log(contenido);
-          res.json({ status: "success", message: "Correo enviado con excito" });
+          res
+            .status(200)
+            .json({
+              status: "success",
+              message: "Compra realizada con exito!",
+            });
         } catch (error) {
           req.logger.error(error);
-          res.json({
-            status: "error",
-            message: "Hubo error al enviar el correo",
-          });
         }
       }
     } else {

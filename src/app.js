@@ -70,8 +70,8 @@ const mockingRouter = new mockingsRouter();
 const productRouter = new productsRouter();
 const userRouter = new usersRouter();
 
-app.use("/api/products", productRouter.getRouter());
 app.use("/", viewsRouter.getRouter());
+app.use("/api/products", productRouter.getRouter());
 app.use("/api/carts", cartRouter.getRouter());
 app.use("/api/chats", chatRouter.getRouter());
 app.use("/api/session", sessionsRouter.getRouter());

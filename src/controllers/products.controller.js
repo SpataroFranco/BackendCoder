@@ -5,6 +5,8 @@ import { Error } from "../enums/Error.js";
 import { generateProductErrorInfo } from "../services/productErrorInfo.js";
 import { generateProductErrorParam } from "../services/productErrorParam.js";
 import { CustomError } from "../services/customError.service.js";
+import userModel from "../dao/models/user.model.js";
+import productoModel from "../dao/models/products.model.js";
 
 const managerProduct = new ProductManager();
 
@@ -35,21 +37,44 @@ export const getProductController = async (req, res) => {
 };
 
 export const postProductController = async (req, res) => {
-  const { title, description, price, status, thumbnail, code, stock, category } =
-    req.body;
+  const {
+    title,
+    description,
+    price,
+    status,
+    thumbnail,
+    code,
+    stock,
+    category,
+  } = req.body;
 
-    // if (!title || !description || !price || !status || !thumbnail || !code || !stock) {
-    //   CustomError.createError({
-    //     name: "Product register error",
-    //     cause: generateProductErrorInfo(req.body),
-    //     message: "Error cargando al producto",
-    //     errorCode: Error.INVALID_JSON,
-    //   });
-    // }
+  // if (!title || !description || !price || !status || !thumbnail || !code || !stock) {
+  //   CustomError.createError({
+  //     name: "Product register error",
+  //     cause: generateProductErrorInfo(req.body),
+  //     message: "Error cargando al producto",
+  //     errorCode: Error.INVALID_JSON,
+  //   });
+  // }
 
-  if(!title||!description||!price || !code || !stock || !category) return res.status(400).send({status:"error",error:"Incomplete values"})
+  if (!title || !description || !price || !code || !stock || !category)
+    return res
+      .status(400)
+      .send({ status: "error", error: "Incomplete values" });
 
-  const product = ProductDTO.getProductInputFrom({title,description,price,status,code,stock,category})
+  const userDB = await userModel.findOne({ email: req.session.user.email });
+
+  const product = ProductDTO.getProductInputFrom({
+    title,
+    description,
+    price,
+    status,
+    thumbnail,
+    code,
+    stock,
+    category,
+    owner: userDB._id,
+  });
 
   const result = await managerProduct.postProduct(product);
 
@@ -57,7 +82,7 @@ export const postProductController = async (req, res) => {
 };
 
 export const putProductController = async (req, res) => {
-  const id = parseInt(req.params.pid);
+  const id = req.params.pid;
   const updateProducto = req.body;
 
   try {
@@ -76,7 +101,7 @@ export const putProductController = async (req, res) => {
 };
 
 export const deleteProductController = async (req, res) => {
-  const id = parseInt(req.params.pid);
+  const id = req.params.pid;
   // if(Number.isNaN(id)){
   //   CustomError.createError({
   //     name: "Product get by id error",
@@ -86,7 +111,30 @@ export const deleteProductController = async (req, res) => {
   //   })
   // }
   try {
+
+    const userDB = await productoModel
+      .findById(id)
+      .populate("owner")
+      .exec()
+      .then((productoEncontrado) => {
+        if (productoEncontrado) {
+          const user = productoEncontrado.owner;
+          return user
+        } else {
+          console.log("user no encontrado");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    if (userDB.rol === "premium") {
+      //ENVIAR CORREO AL USUARIO NOTIFICANDO QUE SE ELIMINÓ SU PRODUCTO
+      console.log("Soy premium");
+    }
+
     await managerProduct.deleteProduct(id);
+
     res.send({
       status: "Success",
       message: "Producto borrado",

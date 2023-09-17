@@ -5,7 +5,7 @@ const adminEmail = config.gmail.adminEmail;
 const adminPass = config.gmail.adminPass;
 
 const transporter = nodemailer.createTransport({
-  service:"gmail",
+  host: "smtp.gmail.com",
   port: 587,
   auth: {
     user: adminEmail,
@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
   secure: false,
   tls: {
     rejectUnauthorized: false,
-  }
+  },
 });
 
 export default transporter;

@@ -7,7 +7,10 @@ import {
   putCartController,
   deleteProductToCartController,
   deleteProductsToCartController,
-  purchaseController
+  purchaseController,
+  finishCart,
+  addProductInCart
+
 } from "../controllers/carts.controller.js";
 import {checkRole} from "../middleware/auth.js";
 
@@ -22,8 +25,14 @@ export default class cartsRouter extends Routers {
     //Vista para ver cart específico
     this.get("/:cid", getCartController);     
 
+    //Vista para ver el carrito final y finalizar la compra
+    this.get("/:cid/purchase", finishCart)
+
     //Actualiza el carrito con un arreglo de productos
-    this.put("/:cid",checkRole(["user"]), putCartController);
+    this.put("/:cid",checkRole(["user","premium"]), putCartController);
+
+    //Agrega un producto al carrito y si ya existe le suma la cantidad en +1
+    this.post("/:cid/products/:pid", addProductInCart);
 
     //Elimina del carrito el producto seleccionado
     this.delete("/:cid/products/:pid", deleteProductToCartController);

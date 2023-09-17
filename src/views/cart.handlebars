@@ -1,7 +1,7 @@
 <div className="navbar">
   <div className="links">
     <div className="section">
-      <a href="/products"> Productos </a>
+      <a href="/api/products"> Productos </a>
       <a href="/api/carts"> Carts </a>
       <a href="/api/chats"> Chat </a>
     </div>
@@ -13,7 +13,7 @@
 <div class="container">
   {{#each cart.products}}
     <div class="product">
-      <p> {{this.product.title}} </p>
+      <p> Producto: {{this.product.title}} </p>
       <p> {{this.product.thumbnail}} </p>
       <p> {{this.product.description}} </p>
       <p> {{this.product.category}} </p>
@@ -22,6 +22,7 @@
         <p> Stock: {{this.product.stock}} </p>
       </div>
     </div>
-
   {{/each}}
+  <p>Total de la compra:</p>
+  <button>Comprar</button>
 </div>

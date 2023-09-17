@@ -1,4 +1,5 @@
 import cartModel from "../models/carts.model.js";
+import productoModel from "../models/products.model.js";
 
 class CarritoManager {
   constructor() {
@@ -78,6 +79,30 @@ class CarritoManager {
         status: "Error",
         message: "El carrito con el id: " + cid + " no existe",
       });
+    }
+  };
+
+  addProductInCartDB = async function (cid, pid) {
+    try {
+      const productExist = await productoModel.findById(pid);
+      if (!productExist) {
+        return null;
+      }
+
+      if (productExist.stock === 0) {
+        return null;
+      }
+      const cart = await this.model.findOne({ _id: cid });
+      const productIndex = cart.products.findIndex((p) => p.product == pid);
+      if (productIndex !== -1) {
+        cart.products[productIndex].quantity += 1;
+      } else {
+        cart.products.push({ product: pid, quantity: 1 });
+      }
+      const result = await cart.save();
+      return result;
+    } catch (error) {
+      console.log(error + "error en el add product in cartDB ");
     }
   };
 

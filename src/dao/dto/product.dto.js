@@ -5,10 +5,11 @@ export default class ProductDTO {
             description:product.description,
             price:product.price,
             status:product.status || false,
-            thumbnail:product.thumbnail || [],
+            thumbnail:product.thumbnail || "",
             code:product.code,
             stock:product.stock,
-            category:product.category
+            category:product.category,
+            owner: product.owner
         }
     }
 }

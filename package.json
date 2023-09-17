@@ -39,7 +39,7 @@
     "mongoose": "^7.1.0",
     "mongoose-paginate-v2": "^1.7.1",
     "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.3",
+    "nodemailer": "^6.9.5",
     "parser": "^0.1.4",
     "passport": "^0.6.0",
     "passport-github2": "^0.1.12",

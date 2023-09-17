@@ -6,9 +6,15 @@ import { CustomError } from "../services/customError.service.js";
 import { Error } from "../enums/Error.js";
 import { generateUserErrorParam } from "../services/userErrorParam.js";
 import { generateUserErrorInfo } from "../services/userErrorInfo.js";
-import {sendRecoveryPass} from "../config/gmail.js";
+import { sendRecoveryPass } from "../config/gmail.js";
 import { verify } from "jsonwebtoken";
-import { createHash, isValidPassword, generateEmailToken, verifyEmailToken } from "../utils.js";
+import {
+  createHash,
+  isValidPassword,
+  generateEmailToken,
+  verifyEmailToken,
+} from "../utils.js";
+import cartModel from "../dao/models/carts.model.js";
 
 export const publicAcces = (req, res, next) => {
   if (req.session.user) return res.redirect("/profile/products");
@@ -58,10 +64,9 @@ export const getViewsProfileController = async (req, res) => {
 
 export const getViewsCurrentController = async (req, res) => {
   const cartUser = await userModel
-    .findOne({ email: req.session.user.email })
-    .populate("cart.cart")
-    .lean();
-
+  .findOne({ email: req.session.user.email })
+  .populate("cart.cart")
+  .lean();
   let { first_name, last_name, email, age, rol } = req.session.user;
   // if (!first_name || !last_name || !email) {
   //   CustomError.createError({
@@ -109,52 +114,58 @@ export const putUserController = async (req, res) => {
   }
 };
 
-export const forgotPassword = async (req , res) => {
+export const forgotPassword = async (req, res) => {
   try {
-    const {email} = req.body;
-    const user = await userService.getUser({email})
+    const { email } = req.body;
+    const user = await userService.getUser({ email });
 
-    if(!user){
-      return res.send(`<div>Error, <a href="/forgot-password">Intente de nuevo</a></div>`)
+    if (!user) {
+      return res.send(
+        `<div>Error, <a href="/forgot-password">Intente de nuevo</a></div>`
+      );
     }
-    const token = generateEmailToken(email, 3*60);
+    const token = generateEmailToken(email, 3 * 60);
 
     await sendRecoveryPass(email, token);
 
-    res.send("Se envio un correo a su cuenta para restablecer la contraseña, volver al<a href='/login'> login</a>");
-
+    res.send(
+      "Se envio un correo a su cuenta para restablecer la contraseña, volver al<a href='/login'> login</a>"
+    );
   } catch (error) {
-    return res.send(`<div>Error, <a href="/forgot-password">Intente de nuevo</a></div>`)
+    return res.send(
+      `<div>Error, <a href="/forgot-password">Intente de nuevo</a></div>`
+    );
   }
-}
+};
 
-export const resetPassword = async (req , res) => {
+export const resetPassword = async (req, res) => {
   try {
     const token = req.query.token;
-    const {email, newPassword} = req.body;
+    const { email, newPassword } = req.body;
 
     const validEmail = verifyEmailToken(token);
-    if(!validEmail){
-      return res.send("El enlace ya no es valido, genere uno nuevo: <a href='/forgot-password> Nuevo enlace </a>")
+    if (!validEmail) {
+      return res.send(
+        "El enlace ya no es valido, genere uno nuevo: <a href='/forgot-password> Nuevo enlace </a>"
+      );
     }
 
-    const user = await userService.getUser({email})
+    const user = await userService.getUser({ email });
 
-    if(!user){
-      return res.send("El usuario no esta registrado.")
+    if (!user) {
+      return res.send("El usuario no esta registrado.");
     }
 
-    if(isValidPassword(newPassword, user)){
-      return res.send("No puedes usar la misma contraseña.")
+    if (isValidPassword(newPassword, user)) {
+      return res.send("No puedes usar la misma contraseña.");
     }
 
     const newHashedPassword = createHash(newPassword);
 
     await userService.updatePassword(user, newHashedPassword);
 
-    res.render("login", {message:"contraseña actualizada"})
-
+    res.render("login", { message: "contraseña actualizada" });
   } catch (error) {
-    res.send(error.message)
+    res.send(error.message);
   }
-}
+};
