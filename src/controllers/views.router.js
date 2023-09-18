@@ -15,6 +15,9 @@ import {
   verifyEmailToken,
 } from "../utils.js";
 import cartModel from "../dao/models/carts.model.js";
+import CarritoManager from "../dao/managers/CarritoManager.js";
+
+const managerCart = new CarritoManager();
 
 export const publicAcces = (req, res, next) => {
   if (req.session.user) return res.redirect("/profile/products");
@@ -63,10 +66,7 @@ export const getViewsProfileController = async (req, res) => {
 };
 
 export const getViewsCurrentController = async (req, res) => {
-  const cartUser = await userModel
-  .findOne({ email: req.session.user.email })
-  .populate("cart.cart")
-  .lean();
+  const cartUser = await managerCart.getCartById(req.session.user.cart[0]._id);
   let { first_name, last_name, email, age, rol } = req.session.user;
   // if (!first_name || !last_name || !email) {
   //   CustomError.createError({

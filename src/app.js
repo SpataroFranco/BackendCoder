@@ -71,15 +71,15 @@ const productRouter = new productsRouter();
 const userRouter = new usersRouter();
 
 app.use("/", viewsRouter.getRouter());
-// app.use("/api/products", productRouter.getRouter());
-// app.use("/api/carts", cartRouter.getRouter());
-// app.use("/api/chats", chatRouter.getRouter());
-// app.use("/api/session", sessionsRouter.getRouter());
-// app.use("/api/users", userRouter.getRouter());
-// app.use("/mockingproducts", mockingRouter.getRouter())
-// app.use("/loggertest", loggerRoute)
-// //Ruta de la documentacion
-// app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+app.use("/api/products", productRouter.getRouter());
+app.use("/api/carts", cartRouter.getRouter());
+app.use("/api/chats", chatRouter.getRouter());
+app.use("/api/session", sessionsRouter.getRouter());
+app.use("/api/users", userRouter.getRouter());
+app.use("/mockingproducts", mockingRouter.getRouter())
+app.use("/loggertest", loggerRoute)
+//Ruta de la documentacion
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 //IO
 const io = new Server(server);

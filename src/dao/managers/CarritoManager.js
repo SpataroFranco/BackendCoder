@@ -24,6 +24,7 @@ class CarritoManager {
 
   getCartById = async (id) => {
     try {
+      
       return await this.model.findById(id).populate("products.product").lean();
     } catch (error) {
       console.log(error);

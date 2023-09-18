@@ -3,10 +3,8 @@
   <h2>Bienvenido {{user.first_name}}</h2>
   <p>Tu email es: {{user.email}}</p>
   <p>Tu edad es: {{user.age}}</p>
-  <p>Carrito:
-    {{cartUser.cart}}
-  </p>
-  <a href="/api/carts/{{cartUser.cart}}/purchase"><button class="btn">Mi carrito</button></a>
+  <p>Carrito:{{cartUser._id}}</p>
+  <a href="/api/carts/{{cartUser._id}}/purchase"><button class="btn">Mi carrito</button></a>
   <h3>Usted es un {{user.rol}}</h3>
   <a href="/profile/products"><button class="btn">Productos</button></a>
   <a href="/api/session/logout"><button class="btn">Salir</button></a>

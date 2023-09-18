@@ -8,6 +8,7 @@ import { generateCartErrorParam } from "../services/cartErrorParam.js";
 import { CustomError } from "../services/customError.service.js";
 import productoModel from "../dao/models/products.model.js";
 import userModel from "../dao/models/user.model.js";
+import { userService } from "../repository/index.js";
 
 const managerCart = new CarritoManager();
 const managerProduct = new ProductManager();
@@ -163,8 +164,8 @@ export const addProductInCart = async (req, res) => {
 };
 
 export const finishCart = async (req, res) => {
+  
   const cart = await managerCart.getCartById(req.params.cid);
-
   //HACER FUNCION PARA CALCULAR TOTAL DE LA COMPRA
 
   if (cart.products.length > 0) {
@@ -180,7 +181,7 @@ export const finishCart = async (req, res) => {
 
 export const purchaseController = async (req, res) => {
   try {
-    const cartId = req.params.cid;
+    const cartId = req.session?.user?.cart[0]._id;
     const cart = await managerCart.getCartById(cartId);
     const userEmail = req.user.email;
     let total = 0;
@@ -206,6 +207,7 @@ export const purchaseController = async (req, res) => {
           cartProduct.product._id
         );
 
+       
         if (cartProduct.quantity <= productDB[0].stock) {
           ticketProducts.push({
             productId: cartProduct._id,
@@ -240,24 +242,26 @@ export const purchaseController = async (req, res) => {
       const ticketCreated = await managerTicket.createTicket(newTicket);
 
       if (ticketCreated) {
-        try {
-          await transporter.sendMail({
-            from: "CodersHouse",
-            to: userEmail,
-            subject: "Compra realizada",
-            html: `
-            <h1>Compra realizada con exito!</h1> 
-            <strong>Monto total</strong>: ${total}`,
-          });
-          res
-            .status(200)
-            .json({
-              status: "success",
-              message: "Compra realizada con exito!",
-            });
-        } catch (error) {
-          req.logger.error(error);
-        }
+        // try {
+        //   await transporter.sendMail({
+        //     from: "CodersHouse",
+        //     to: userEmail,
+        //     subject: "Compra realizada",
+        //     html: `
+        //     <h1>Compra realizada con exito!</h1> 
+        //     <strong>Monto total</strong>: ${total}`,
+        //   });
+        //   res
+        //     .status(200)
+        //     .json({
+        //       status: "success",
+        //       message: "Compra realizada con exito!",
+        //     });
+        // } catch (error) {
+        //   req.logger.error(error);
+        // }
+        res.send({ status: "success", payload: ticketCreated });
+       
       }
     } else {
       res.send("El carrito no existe");
